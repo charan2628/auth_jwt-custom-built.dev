@@ -1,9 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
-import { UserSchema } from './schemas/user.schema';
+import { UserSchema } from '../schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User } from '../interface/User';
+import { User } from '../../interface/User';
 import { AuthResponse } from 'src/interface/AuthResponse';
+import { JWTTokenService } from './jwt-token.service';
 
 
 describe('AuthService', () => {
@@ -15,14 +16,14 @@ describe('AuthService', () => {
             imports: [
                  MongooseModule.forRoot(process.env.DB_URL),
                  MongooseModule.forFeature([{ name: User.name, schema: UserSchema}])],
-            providers: [AuthService]
+            providers: [AuthService, JWTTokenService]
         }).compile();
-        debugger;
+        // debugger;
         authService = moduleRef.get<AuthService>(AuthService);
     });
 
     test('registerd user should be authorized', async () => {
-        debugger;
+        // debugger;
         await authService.save({
             username: 'user1',
             password: 'pass1'
