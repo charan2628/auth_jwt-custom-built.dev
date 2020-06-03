@@ -1,16 +1,17 @@
 {
+    "saltRounds": 2,
     "verifiedUsers": {
-        "non-admin": [
+        "standard": [
             {
                 "username": "userv1",
-                "password": "userv1",
+                "password": "$2b$04$cju5fqgvk4IoIZsXXj2u/OSbeh2eFIuDePvm.NPDpnsk1I1Rde1qy",
                 "isAdmin": false,
                 "isVerified": true,
                 "confirmCode": 0
             },
             {
                 "username": "userv2",
-                "password": "userv2",
+                "password": "$2b$04$PtHU1pbrbGvTsDMd9UeRGO2MhAcFGzXytzMZ6lJbgXdJNMDH9Npw6",
                 "isAdmin": false,
                 "isVerified": true,
                 "confirmCode": 0
@@ -19,14 +20,14 @@
         "admin": [
             {
                 "username": "adminv1",
-                "password": "adminv1",
+                "password": "$2b$04$iAHDYknA7t9M5lWZ/cFPEOyzucvQSZT4poFK1FJMaQAazkfrjJIdG",
                 "isAdmin": true,
                 "isVerified": true,
                 "confirmCode": 0
             },
             {
                 "username": "adminv2",
-                "password": "adminv2",
+                "password": "$2b$04$1Uz3bkEqPBBsmwrhgZa17ujzGgNTacjX1Cbwr8cLNXU87e8Sif5T6",
                 "isAdmin": true,
                 "isVerified": true,
                 "confirmCode": 0
@@ -34,17 +35,17 @@
         ]
     },
     "nonVerifiedUsers": {
-        "non-admin": [
+        "standard": [
             {
                 "username": "user1",
-                "password": "user1",
+                "password": "$2b$04$$2b$04$i66ePukgcjpACjFFYh5BoeZg1DD7/3pj8/VmQHXxF0FyuG4ASRIx.",
                 "isAdmin": false,
                 "isVerified": false,
                 "confirmCode": 1234
             },
             {
                 "username": "user2",
-                "password": "user2",
+                "password": "$2b$04$DRpLauu7UXY1JyrYqu6u0.x53PDylxZbJLSiWebqLMq8UaSrIvEk2",
                 "isAdmin": false,
                 "isVerified": false,
                 "confirmCode": 1234
@@ -53,14 +54,14 @@
         "admin": [
             {
                 "username": "adminv1",
-                "password": "adminv1",
+                "password": "$2b$04$UC5GHxBSR3YKz4yTJ0U3Ee82bwcEmlNB73sx2sOcPI88zVdxpx4t6",
                 "isAdmin": true,
                 "isVerified": false,
                 "confirmCode": 1234
             },
             {
                 "username": "adminv2",
-                "password": "adminv2",
+                "password": "$2b$04$cu5NYI0ZTNeuwSaTc.8WHOQM4YiE3pPkV.3WGsWdEPi4PHEqoPGeu",
                 "isAdmin": true,
                 "isVerified": false,
                 "confirmCode": 1234
