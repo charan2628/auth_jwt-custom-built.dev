@@ -2,16 +2,15 @@ require('dotenv').config();
 
 const fs = require('fs');
 const async = require('async');
-
-const { genTestData } = require('../test-data/test-data-gen');
+let testData = JSON.parse(fs.readFileSync('./test-data/test-data.json', {encoding: 'utf-8'}));
+// const { genTestData } = require('../test-data/test-data-gen');
 
 //generating test data based on salt rounds
-let testData = JSON.parse(fs.readFileSync('./test-data/test-data.json', { encoding: 'utf-8'}));
-if (testData.saltRounds !== +process.env.SALT_ROUNDS) {
-    console.log('GENERATING NEW DATA');
-    debugger;
-    testData = genTestData(+process.env.SALT_ROUNDS, testData);
-}
+// if (testData.saltRounds !== +process.env.SALT_ROUNDS) {
+//     console.log('GENERATING NEW DATA');
+//     debugger;
+//     testData = genTestData(+process.env.SALT_ROUNDS, testData);
+// }
 
 //connecting to mongo-db
 const MongoClient = require('mongodb').MongoClient;

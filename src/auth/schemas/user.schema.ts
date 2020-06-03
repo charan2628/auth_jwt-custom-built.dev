@@ -10,11 +10,17 @@ export class UserDoc extends Document {
 
     @Prop()
     password: string;
+    
+    @Prop()
+    isVerified: boolean;
 
     @Prop({
         required: false
     })
     isAdmin: boolean
+
+    @Prop()
+    confirmCode: string
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDoc);
