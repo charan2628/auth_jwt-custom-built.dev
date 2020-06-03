@@ -3,10 +3,10 @@ import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import * as bcrypt from 'bcrypt';
 
-import { User } from "../../interface/User";
+import { User } from "../../interfaces/User";
 import { UserDoc } from '../schemas/user.schema';
-import { AuthResponse } from "src/interface/AuthResponse";
-import { UserResponse } from "src/interface/UserResponse";
+import { AuthResponse } from "src/interfaces/AuthResponse";
+import { UserResponse } from "src/interfaces/UserResponse";
 import { JWTTokenService } from "./jwt-token.service";
 
 @Injectable()

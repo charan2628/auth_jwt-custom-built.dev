@@ -2,8 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { UserSchema } from '../schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
-import { User } from '../../interface/User';
-import { AuthResponse } from 'src/interface/AuthResponse';
+import { User } from '../../interfaces/User';
+import { AuthResponse } from 'src/interfaces/AuthResponse';
 import { JWTTokenService } from './jwt-token.service';
 
 
