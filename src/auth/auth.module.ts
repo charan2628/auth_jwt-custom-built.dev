@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 
 @Module({
     imports: [
-        MongooseModule.forRoot('mongodb://localhost/nest'),
+        MongooseModule.forRoot(process.env.DB_URL),
         MongooseModule.forFeature([{ name: User.name, schema: UserSchema}])],
     providers: [AuthService],
     exports: [AuthService]

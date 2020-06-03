@@ -13,7 +13,7 @@ describe('AuthService', () => {
     beforeAll(async () => {
         moduleRef = await Test.createTestingModule({
             imports: [
-                 MongooseModule.forRoot('mongodb://localhost/auth_jwt_test'),
+                 MongooseModule.forRoot(process.env.DB_URL),
                  MongooseModule.forFeature([{ name: User.name, schema: UserSchema}])],
             providers: [AuthService]
         }).compile();
