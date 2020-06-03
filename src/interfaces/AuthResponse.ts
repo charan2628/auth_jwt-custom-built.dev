@@ -1,4 +1,5 @@
 export interface AuthResponse {
-    isAuthorized: boolean,
+    isAuthorized: boolean;
     isAdmin: boolean;
+    isVerified: boolean;
 }

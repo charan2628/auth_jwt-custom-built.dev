@@ -3,13 +3,14 @@ import { AuthService } from './auth.service';
 import { UserSchema } from '../schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User } from '../../interfaces/User';
-import { AuthResponse } from 'src/interfaces/AuthResponse';
 import { JWTTokenService } from './jwt-token.service';
-
+import { TestData } from 'src/interfaces/TestData';
+import { UserResponse } from 'src/interfaces/UserResponse';
 
 describe('AuthService', () => {
     let authService: AuthService;
     let moduleRef: TestingModule;
+    let testData: TestData;
 
     beforeAll(async () => {
         moduleRef = await Test.createTestingModule({
@@ -18,31 +19,90 @@ describe('AuthService', () => {
                  MongooseModule.forFeature([{ name: User.name, schema: UserSchema}])],
             providers: [AuthService, JWTTokenService]
         }).compile();
-        // debugger;
+        testData = global["testData"] as TestData;
+        if (!testData) {
+            throw new Error("Test Data not setup");
+        }
         authService = moduleRef.get<AuthService>(AuthService);
     });
 
-    test('registerd user should be authorized', async () => {
-        // debugger;
-        await authService.save({
-            username: 'user1',
-            password: 'pass1'
+    describe('when user is registered and verified', () => {
+        it('if user is standard', async () => {
+            let user: User = testData.verifiedUsers.standard[0];
+            let userRes: UserResponse = await authService.genToken({
+                ...user,
+                password: user.username 
+            });
+            expect(userRes.status).toBe(true);
+            expect(userRes.token).toBeTruthy();
+            expect(userRes.authResponse.isAuthorized).toBe(true);
+            expect(userRes.authResponse.isVerified).toBe(true);
+            expect(userRes.authResponse.isAdmin).toBe(false);
         });
-        let res: AuthResponse = await authService.isAuthorized({
-            username: 'user1',
-            password: 'pass1'
+
+        it('if user is admin', async () => {
+            let user: User = testData.verifiedUsers.admin[0];
+            let userRes: UserResponse = await authService.genToken({
+                ...user,
+                password: user.username 
+            });
+            expect(userRes.status).toBe(true);
+            expect(userRes.token).toBeTruthy();
+            expect(userRes.authResponse.isAuthorized).toBe(true);
+            expect(userRes.authResponse.isVerified).toBe(true);
+            expect(userRes.authResponse.isAdmin).toBe(true);
         });
-        expect(res.isAuthorized).toBe(true);
-        expect(res.isAdmin).toBe(false);
     });
 
-    test('admin user should be authorized', async () => {
-        let res: AuthResponse = await authService.isAuthorized({
-            username: 'admin1',
-            password: 'admin1'
+    describe('when user is registered and un-verified', () => {
+        it('if user is standard', async () => {
+            let user: User = testData.nonVerifiedUsers.standard[0];
+            let userRes: UserResponse = await authService.genToken({
+                ...user,
+                password: user.username 
+            });
+            expect(userRes.status).toBe(false);
+            expect(userRes.token).toBeFalsy();
+            expect(userRes.authResponse.isAuthorized).toBe(true);
+            expect(userRes.authResponse.isVerified).toBe(false);
+            expect(userRes.authResponse.isAdmin).toBe(false);
         });
-        expect(res.isAuthorized).toBe(true);
-        expect(res.isAdmin).toBe(true);
+
+        it('if user is admin', async () => {
+            let user: User = testData.nonVerifiedUsers.admin[0];
+            let userRes: UserResponse = await authService.genToken({
+                ...user,
+                password: user.username 
+            });
+            expect(userRes.status).toBe(false);
+            expect(userRes.token).toBeFalsy();
+            expect(userRes.authResponse.isAuthorized).toBe(true);
+            expect(userRes.authResponse.isVerified).toBe(false);
+            expect(userRes.authResponse.isAdmin).toBe(true);
+        });
+    });
+
+    describe('when user is registered and un-verified', () => {
+        test('if provied confirm-code should be verified', async () => {
+            let user: User = testData.nonVerifiedUsers.standard[0];
+            let res: boolean = await authService.confirm(user);
+            expect(res).toBe(true);
+        });
+
+        test('if provied confirm-code and verified then should get valid token', async () => {
+            let user: User = testData.nonVerifiedUsers.standard[1];
+            let res: boolean = await authService.confirm(user);
+            expect(res).toBe(true);
+            debugger;
+            let userRes: UserResponse = await authService.genToken({
+                ...user,
+                password: user.username
+            });
+            expect(userRes.status).toBe(true);
+            expect(userRes.authResponse.isVerified).toBe(true);
+            expect(userRes.authResponse.isAuthorized).toBe(true);
+            expect(userRes.authResponse.isAdmin).toBe(false);
+        });
     });
 
     afterAll(() => {

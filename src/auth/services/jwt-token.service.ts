@@ -14,7 +14,6 @@ export class JWTTokenService {
     }
 
     genToken(payload: string | object | Buffer): Promise<string> {
-        // debugger;
         return new Promise<string>((resolve, reject) => {
             jwtSign(payload, this.privateKey, {
                 algorithm: process.env.JWT_ALG as Algorithm,
