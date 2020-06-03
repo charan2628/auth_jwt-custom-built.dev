@@ -1,29 +1,72 @@
-const bcrypt = require('bcrypt');
-const MongoClient = require('mongodb').MongoClient;
-const url = "mongodb://localhost:27017";
+require('dotenv').config();
 
-const dbname = "auth_jwt_test";
+const fs = require('fs');
+const async = require('async');
+
+const { genTestData } = require('../test-data/test-data-gen');
+
+//generating test data based on salt rounds
+let testData = JSON.parse(fs.readFileSync('./test-data/test-data.json', { encoding: 'utf-8'}));
+if (testData.saltRounds !== +process.env.SALT_ROUNDS) {
+    console.log('GENERATING NEW DATA');
+    debugger;
+    testData = genTestData(+process.env.SALT_ROUNDS, testData);
+}
+
+//connecting to mongo-db
+const MongoClient = require('mongodb').MongoClient;
+const url = process.env.DB_URL;
 
 const client = new MongoClient(url, {
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useNewUrlParser: true
 });
 
 client.connect(function(err) {
     if (err) {
         throw err;
     }
-    const db = client.db(dbname);
-    db.collection('users').deleteMany({}).then(() => {
-        const hash = bcrypt.hashSync('admin1', 2);
-        db.collection('users').insertOne({
-            username: 'admin1',
-            password: hash,
-            isAdmin: true
-        }).then(() => {
+    const db = client.db(process.env.DB_NAME).collection('users');
+    db.deleteMany({}).then(() => {
+        async.parallel([
+            (cb) => {
+                db.insertMany(testData.verifiedUsers.standard, (err) => {
+                    if (err) {
+                        return cb(err);
+                    }
+                    cb();
+                })
+            },
+            (cb) => {
+                db.insertMany(testData.verifiedUsers.admin, (err) => {
+                    if (err) {
+                        return cb(err);
+                    }
+                    cb();
+                })
+            },
+            (cb) => {
+                db.insertMany(testData.nonVerifiedUsers.standard, (err) => {
+                    if (err) {
+                        return cb(err);
+                    }
+                    cb();
+                })
+            },
+            (cb) => {
+                db.insertMany(testData.nonVerifiedUsers.admin, (err) => {
+                    if (err) {
+                        return cb(err);
+                    }
+                    cb();
+                })
+            }
+        ], (err) => {
+            if (err) {
+                throw err;
+            }
+            console.log('TEST DATA SETUP SUCCESSFULLY');
             client.close();
-            console.log("DB scripts ran successfully");
-        }).catch(err => {
-            throw err;
         });
     }).catch(err => {
         throw err;
