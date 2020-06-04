@@ -21,7 +21,7 @@ export class AuthService {
         private jwtTokenService: JWTTokenService) { }
 
     save(user: User): Promise<User> {
-        return new Promise<UserDoc>((resolve, reject) => {
+        return new Promise<User>((resolve, reject) => {
             this.userModel.findOne({ username: user.username }).countDocuments((err, cnt) => {
                 if (err) {
                     return reject(err);
@@ -37,12 +37,16 @@ export class AuthService {
                         username: user.username,
                         password: hash,
                         isVerified: false,
-                        confirmCode: crypto.randomBytes(3).toString('utf-8')
+                        confirmCode: crypto.randomBytes(3).toString('hex')
                     }).save(function(err, user_db) {
                         if (err) {
                             return reject(err);
                         }
-                        resolve(user_db);
+                        resolve({
+                            username: user_db.username,
+                            password: "",
+                            confirmCode: user_db.confirmCode
+                        });
                     });
                 });
             });
@@ -145,7 +149,7 @@ export class AuthService {
                         message: "authorized",
                         authResponse
                     });
-                }).catch(err => resolve(err));
+                }).catch(err => reject(err));
             }).catch(err => reject(err));
         });
     }

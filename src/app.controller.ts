@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, InternalServerErrorException, Headers, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, InternalServerErrorException, Headers, Query, UseGuards, HttpCode } from '@nestjs/common';
 import { AuthService } from './auth/services/auth.service';
 import { User } from './interfaces/User';
 import { UserResponse } from './interfaces/UserResponse';
@@ -13,6 +13,7 @@ export class AppController {
     private readonly jwtTokenService: JWTTokenService) {}
 
   @Post('login')
+  @HttpCode(200)
   async login(@Body() user: User): Promise<UserResponse> {
     try {
       return await this.authService.genToken(user);
@@ -22,7 +23,15 @@ export class AppController {
   }
 
   @Get('verifyToken')
-  async verifyToken(@Headers("Authorization") auth: string): Promise<ClientResponse> {
+  @HttpCode(200)
+  async verifyToken(@Headers("authorization") auth: string): Promise<ClientResponse> {
+    debugger;
+    if (!auth) {
+      return {
+        status: false,
+        message: ""
+      }
+    }
     const token: string = auth.split(" ")[1];
     if (!token) {
       return {
@@ -44,6 +53,7 @@ export class AppController {
   }
 
   @Get("confirm")
+  @HttpCode(200)
   async confirm(
     @Query('confirmCode') confirmCode: string,
     @Query('username') username: string): Promise<ClientResponse> {
@@ -64,6 +74,7 @@ export class AppController {
     }
 
     @Post('save')
+    @HttpCode(200)
     @UseGuards(AdminGuard)
     async save(@Body() user: User): Promise<ClientResponse> {
       let res = await this.authService.save(user);
