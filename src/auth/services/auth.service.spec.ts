@@ -4,8 +4,9 @@ import { UserSchema } from '../schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User } from '../../interfaces/User';
 import { JWTTokenService } from './jwt-token.service';
-import { TestData } from 'src/interfaces/TestData';
-import { UserResponse } from 'src/interfaces/UserResponse';
+import { TestData } from '../../interfaces/TestData';
+import { UserResponse } from '../../interfaces/UserResponse';
+import { UserAlreadyExisted } from '../../exceptions/UserAlreadyExisted';
 
 describe('AuthService', () => {
     let authService: AuthService;
@@ -123,6 +124,15 @@ describe('AuthService', () => {
             expect(res).toBe(true);
         });
     });
+
+    describe('when user already existed', () => {
+        test('then user shouldn\'t be saved', async () => {
+            let user: User = testData.verifiedUsers.standard[0];
+            await authService.save(user).catch(err => {
+                expect(err).toBeInstanceOf(UserAlreadyExisted);
+            });
+        });
+    })
 
     afterAll(() => {
         moduleRef.close();

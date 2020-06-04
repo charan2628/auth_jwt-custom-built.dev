@@ -6,11 +6,12 @@ import * as crypto from 'crypto';
 
 import { User } from "../../interfaces/User";
 import { UserDoc } from '../schemas/user.schema';
-import { AuthResponse } from "src/interfaces/AuthResponse";
-import { UserResponse } from "src/interfaces/UserResponse";
+import { AuthResponse } from "../../interfaces/AuthResponse";
+import { UserResponse } from "../../interfaces/UserResponse";
 import { JWTTokenService } from "./jwt-token.service";
-import { ConfirmCode } from "src/interfaces/ConfirmCode";
+import { ConfirmCode } from "../../interfaces/ConfirmCode";
 import { TokenExpiredError, JsonWebTokenError, NotBeforeError } from "jsonwebtoken";
+import { UserAlreadyExisted } from "../../exceptions/UserAlreadyExisted";
 
 @Injectable()
 export class AuthService {
@@ -21,20 +22,28 @@ export class AuthService {
 
     save(user: User): Promise<User> {
         return new Promise<UserDoc>((resolve, reject) => {
-            bcrypt.hash(user.password, 2, (err, hash) => {
+            this.userModel.findOne({ username: user.username }).countDocuments((err, cnt) => {
                 if (err) {
                     return reject(err);
                 }
-                new this.userModel({
-                    username: user.username,
-                    password: hash,
-                    isVerified: false,
-                    confirmCode: crypto.randomBytes(3).toString('utf-8')
-                }).save(function(err, user_db) {
+                if (cnt) {
+                    return reject(new UserAlreadyExisted());
+                }
+                bcrypt.hash(user.password, 2, (err, hash) => {
                     if (err) {
                         return reject(err);
                     }
-                    resolve(user_db);
+                    new this.userModel({
+                        username: user.username,
+                        password: hash,
+                        isVerified: false,
+                        confirmCode: crypto.randomBytes(3).toString('utf-8')
+                    }).save(function(err, user_db) {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(user_db);
+                    });
                 });
             });
         });
