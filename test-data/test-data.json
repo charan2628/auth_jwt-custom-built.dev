@@ -72,6 +72,13 @@
                 "isAdmin": true,
                 "isVerified": false,
                 "confirmCode": "1234"
+            },
+            {
+                "username": "admin3",
+                "password": "$2b$04$rzBeHJ2oiN84pXyR2h97ueF7rjSk3TKsurlf4/hFyv4Pvn7zHLAUK",
+                "isAdmin": true,
+                "isVerified": false,
+                "confirmCode": "1234"
             }
         ]
     }

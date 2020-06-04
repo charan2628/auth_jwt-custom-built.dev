@@ -23,7 +23,9 @@
     "pretest:debug": "node ./scripts/db-test.script.js",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand --setupFiles dotenv/config ../scripts/load-test-data.ts",
     "pretest:e2e": "node ./scripts/db-test.script.js",
-    "test:e2e": "jest --config ./test/jest-e2e.json --setupFiles dotenv/config ../scripts/load-test-data.ts"
+    "test:e2e": "jest --config ./test/jest-e2e.json --setupFiles dotenv/config ../scripts/load-test-data.ts",
+    "pretest:e2e:debug": "node ./scripts/db-test.script.js",
+    "test:e2e:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --config ./test/jest-e2e.json --setupFiles dotenv/config ../scripts/load-test-data.ts"
   },
   "dependencies": {
     "@nestjs/common": "^7.0.0",
@@ -44,6 +46,7 @@
     "@nestjs/cli": "^7.0.0",
     "@nestjs/schematics": "^7.0.0",
     "@nestjs/testing": "^7.0.0",
+    "@types/async": "^3.2.3",
     "@types/bcrypt": "^3.0.0",
     "@types/express": "^4.17.3",
     "@types/jest": "25.1.4",

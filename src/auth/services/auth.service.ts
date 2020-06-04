@@ -59,7 +59,6 @@ export class AuthService {
                 return resolve(false);
             }
             this.userModel.findOne({username: confirmCode.username}, (err, dbUser) => {
-                // debugger
                 if(err) {
                     reject(err);
                 }
@@ -95,7 +94,6 @@ export class AuthService {
     isAuthorized(user: User) : Promise<AuthResponse> {
         return new Promise<AuthResponse>((resolve, reject) => {
             this.userModel.findOne({username: user.username}, function(err, dbUser) {
-                debugger;
                 if(err) {
                     return reject(err);
                 }
@@ -128,10 +126,8 @@ export class AuthService {
     }
 
     genToken(user: User): Promise<UserResponse> {
-        debugger;
         return new Promise<UserResponse>((resolve, reject) => {
             this.isAuthorized(user).then((authResponse: AuthResponse) => {
-                debugger;
                 if (!authResponse.isAuthorized || !authResponse.isVerified) {
                     return resolve({
                         status: false,

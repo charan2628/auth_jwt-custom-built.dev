@@ -100,7 +100,6 @@ describe('AuthService', () => {
                 confirmCode: user.confirmCode
             });
             expect(res).toBe(true);
-            debugger;
             let userRes: UserResponse = await authService.genToken({
                 ...user,
                 password: user.username

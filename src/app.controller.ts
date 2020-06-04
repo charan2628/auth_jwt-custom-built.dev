@@ -1,12 +1,14 @@
-import { Controller, Get, Post, Body, InternalServerErrorException, Headers, Query, UseGuards, HttpCode } from '@nestjs/common';
+import { Controller, Get, Post, Body, InternalServerErrorException, Headers, Query, UseGuards, HttpCode, UseFilters } from '@nestjs/common';
 import { AuthService } from './auth/services/auth.service';
 import { User } from './interfaces/User';
 import { UserResponse } from './interfaces/UserResponse';
 import { JWTTokenService } from './auth/services/jwt-token.service';
 import { ClientResponse } from './interfaces/ClientResponse';
 import { AdminGuard } from './auth/guards/admin.guard';
+import { AppExceptionFilter } from './filters/AppExceptionFilter';
 
 @Controller('auth')
+@UseFilters(AppExceptionFilter)
 export class AppController {
   constructor(
     private readonly authService: AuthService,
@@ -15,17 +17,12 @@ export class AppController {
   @Post('login')
   @HttpCode(200)
   async login(@Body() user: User): Promise<UserResponse> {
-    try {
-      return await this.authService.genToken(user);
-    } catch (err) {
-      throw new InternalServerErrorException(err);
-    }
+    return await this.authService.genToken(user);
   }
 
   @Get('verifyToken')
   @HttpCode(200)
   async verifyToken(@Headers("authorization") auth: string): Promise<ClientResponse> {
-    debugger;
     if (!auth) {
       return {
         status: false,
