@@ -85,13 +85,19 @@ describe('AuthService', () => {
     describe('when user is registered and un-verified', () => {
         test('if provied confirm-code should be verified', async () => {
             let user: User = testData.nonVerifiedUsers.standard[0];
-            let res: boolean = await authService.confirm(user);
+            let res: boolean = await authService.confirm({
+                username: user.username,
+                confirmCode: user.confirmCode
+            });
             expect(res).toBe(true);
         });
 
         test('if provied confirm-code and verified then should get valid token', async () => {
             let user: User = testData.nonVerifiedUsers.standard[1];
-            let res: boolean = await authService.confirm(user);
+            let res: boolean = await authService.confirm({
+                username: user.username,
+                confirmCode: user.confirmCode
+            });
             expect(res).toBe(true);
             debugger;
             let userRes: UserResponse = await authService.genToken({
@@ -102,6 +108,19 @@ describe('AuthService', () => {
             expect(userRes.authResponse.isVerified).toBe(true);
             expect(userRes.authResponse.isAuthorized).toBe(true);
             expect(userRes.authResponse.isAdmin).toBe(false);
+        });
+    });
+
+    describe('when admin user login', () => {
+        test('verify isAdmin returning true for admin token', async () => {
+            let user: User = testData.verifiedUsers.admin[0];
+            let token: string = (await authService.genToken({
+                ...user,
+                password: user.username
+            })).token;
+            expect(token).toBeTruthy();
+            let res: boolean = await authService.isAdmin(token);
+            expect(res).toBe(true);
         });
     });
 

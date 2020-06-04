@@ -9,6 +9,8 @@ import { UserDoc } from '../schemas/user.schema';
 import { AuthResponse } from "src/interfaces/AuthResponse";
 import { UserResponse } from "src/interfaces/UserResponse";
 import { JWTTokenService } from "./jwt-token.service";
+import { ConfirmCode } from "src/interfaces/ConfirmCode";
+import { TokenExpiredError, JsonWebTokenError, NotBeforeError } from "jsonwebtoken";
 
 @Injectable()
 export class AuthService {
@@ -38,12 +40,12 @@ export class AuthService {
         });
     }
 
-    confirm(user: User): Promise<boolean> {
+    confirm(confirmCode: ConfirmCode): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            if (!user.confirmCode) {
+            if (!confirmCode.confirmCode) {
                 return resolve(false);
             }
-            this.userModel.findOne({username: user.username}, (err, dbUser) => {
+            this.userModel.findOne({username: confirmCode.username}, (err, dbUser) => {
                 // debugger
                 if(err) {
                     reject(err);
@@ -54,7 +56,7 @@ export class AuthService {
                 if (dbUser.isVerified) {
                     return resolve(true);
                 }
-                if (user.confirmCode === dbUser.confirmCode) {
+                if (confirmCode.confirmCode === dbUser.confirmCode) {
                     this.userModel.updateOne(
                         {
                             _id: dbUser._id
@@ -138,4 +140,21 @@ export class AuthService {
             }).catch(err => reject(err));
         });
     }
+
+    isAdmin(token: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.jwtTokenService.decodeToken(token).then(val => {
+                if (val.isAdmin) {
+                    return resolve(true);
+                }
+                resolve(false);
+            }).catch(err => {
+                if (err instanceof TokenExpiredError || err instanceof JsonWebTokenError
+                    || err instanceof NotBeforeError) {
+                        return resolve(false);
+                }
+                reject(err);
+            });
+        });
+    } 
 }

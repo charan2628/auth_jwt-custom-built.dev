@@ -41,4 +41,15 @@ export class JWTTokenService {
             });
         });
     }
+
+    decodeToken(token: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            jwtVerify(token,this.publicKey, (err, decoded) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(decoded);
+            });
+        });
+    }
 }
