@@ -206,7 +206,6 @@ describe('AppController (e2e)', () => {
         .post('/auth/login')
         .send(user)
         .then((res: request.Response) => {
-          debugger;
           expect(res.status).toBe(200)
           let response = res.body as UserResponse;
           expect(response.status).toBe(false);

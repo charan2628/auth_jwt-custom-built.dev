@@ -114,7 +114,10 @@ describe('AuthService', () => {
     describe('when registered user asks for confirm code', () => {
         it('should be given', async () => {
             let user: User = testData.nonVerifiedUsers.standard[3];
-            let res: User = await authService.confirmCode(user);
+            let res: User = await authService.confirmCode({
+                username: user.username,
+                password: user.username
+            });
             expect(user.confirmCode).toBe(res.confirmCode);
         });
     });
@@ -125,7 +128,26 @@ describe('AuthService', () => {
             let res: User = await authService.newConfirmCode(user);
             expect(res.confirmCode).toBeTruthy();
         });
-    })
+    });
+
+    describe('when registered user changes password with valid token', () => {
+        it('should be changed', async () => {
+            let user = testData.verifiedUsers.standard[2];
+            let res: User = await authService.newConfirmCode(user);
+            expect(res.confirmCode).toBeTruthy();
+            let response: boolean = await authService.changePassword({
+                username: user.username,
+                password: "1234",
+                confirmCode: res.confirmCode
+            });
+            expect(response).toBe(true);
+            let UserResponse: UserResponse = await authService.genToken({
+                username: user.username,
+                password: "1234"
+            });
+            expect(UserResponse.status).toBe(true);
+        });
+    });
 
     describe('when admin user login', () => {
         test('verify isAdmin returning true for admin token', async () => {

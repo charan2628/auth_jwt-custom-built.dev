@@ -29,7 +29,7 @@ export class AuthService {
                 if (cnt) {
                     return reject(new UserAlreadyExisted());
                 }
-                bcrypt.hash(user.password, 2, (err, hash) => {
+                bcrypt.hash(user.password, +process.env.SALT_ROUNDS, (err, hash) => {
                     if (err) {
                         return reject(err);
                     }
@@ -37,7 +37,9 @@ export class AuthService {
                         username: user.username,
                         password: hash,
                         isVerified: false,
-                        confirmCode: crypto.randomBytes(3).toString('hex')
+                        isAdmin: false,
+                        confirmCode: crypto.randomBytes(3).toString('hex'),
+                        flag: true
                     }).save(function(err, user_db) {
                         if (err) {
                             return reject(err);
@@ -59,20 +61,55 @@ export class AuthService {
                 if (err) {
                     return reject(err);
                 }
-                if (!dbUser) {
+                if (!dbUser && !dbUser.flag) {
                     return reject(new UnauthorizedException());
                 }
                 bcrypt.compare(user.password, dbUser.password, (err, res) => {
                     if (err) {
                         return reject(err);
                     }
-                    if (err) {
+                    if (!res) {
                         return reject(new UnauthorizedException());
                     }
                     resolve({
                         username: dbUser.username,
                         password: "",
                         confirmCode: dbUser.confirmCode
+                    });
+                });
+            });
+        });
+    }
+
+    changePassword(user: User): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            this.userModel.findOne({ username: user.username }, (err, dbUser) => {
+                if (err) {
+                    return reject(err);
+                }
+                if (!dbUser) {
+                    return reject(new UnauthorizedException());
+                }
+                if (dbUser.confirmCode !== user.confirmCode && dbUser.flag) {
+                    return resolve(false);
+                }
+                bcrypt.hash(user.password, +process.env.SALT_ROUNDS, (err, hash) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    this.userModel.updateOne({
+                        _id: dbUser.id
+                    }, {
+                        $set: {
+                            password: hash,
+                            confirmCode: "",
+                            flag: false
+                        }
+                    }, (err) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve(true);
                     });
                 });
             });
@@ -94,7 +131,8 @@ export class AuthService {
                         _id: dbUser.id 
                     }, {
                         $set: {
-                            confirmCode: code
+                            confirmCode: code,
+                            flag: true
                         }
                     }, (err) => {
                         if (err) {
@@ -103,7 +141,7 @@ export class AuthService {
                         resolve({
                             username: user.username,
                             password: "",
-                            confirmCode: user.confirmCode
+                            confirmCode: code
                         });
                 });
             });
@@ -125,14 +163,15 @@ export class AuthService {
                 if (dbUser.isVerified) {
                     return resolve(true);
                 }
-                if (confirmCode.confirmCode === dbUser.confirmCode) {
+                if (confirmCode.confirmCode === dbUser.confirmCode && dbUser.flag) {
                     this.userModel.updateOne(
                         {
                             _id: dbUser._id
                         }, {
                             $set: {
                                 isVerified: true,
-                                confirmCode: ""
+                                confirmCode: "",
+                                flag: false
                             }
                         }
                     , (err) => {

@@ -21,6 +21,9 @@ export class UserDoc extends Document {
 
     @Prop()
     confirmCode: string
+
+    @Prop()
+    flag: boolean
 }
 
 export const UserSchema = SchemaFactory.createForClass(UserDoc);

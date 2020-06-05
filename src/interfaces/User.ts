@@ -4,4 +4,5 @@ export class User {
     readonly isAdmin?: boolean;
     readonly isVerified?: boolean;
     readonly confirmCode?: string;
+    readonly flag?: boolean;
 }

@@ -94,7 +94,7 @@ describe('AppController', () => {
     test('it should be returned', async () => {
       let user: User = testData.nonVerifiedUsers.standard[3];
       let res: ClientResponse = await appController.confirmCode(
-        {username: user.username, password: user.password}
+        {username: user.username, password: user.username}
       );
       expect(res.status).toBe(true);
       expect(res.data.confirmCode).toBe(user.confirmCode);
