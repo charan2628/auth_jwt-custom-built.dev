@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, InternalServerErrorException, Headers, Query, UseGuards, HttpCode, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Headers, Query, UseGuards, HttpCode, UseFilters } from '@nestjs/common';
 import { AuthService } from './auth/services/auth.service';
 import { User } from './interfaces/User';
 import { UserResponse } from './interfaces/UserResponse';
@@ -7,20 +7,26 @@ import { ClientResponse } from './interfaces/ClientResponse';
 import { AdminGuard } from './auth/guards/admin.guard';
 import { AppExceptionFilter } from './filters/AppExceptionFilter';
 
-@Controller('auth')
+@Controller('')
 @UseFilters(AppExceptionFilter)
 export class AppController {
   constructor(
     private readonly authService: AuthService,
     private readonly jwtTokenService: JWTTokenService) {}
 
-  @Post('login')
+  @Get('')
+  @HttpCode(200)
+  alive(): string {
+    return "alive";
+  }
+
+  @Post('auth/login')
   @HttpCode(200)
   async login(@Body() user: User): Promise<UserResponse> {
     return await this.authService.genToken(user);
   }
 
-  @Get('verifyToken')
+  @Get('auth/verifyToken')
   @HttpCode(200)
   async verifyToken(@Headers("authorization") auth: string): Promise<ClientResponse> {
     if (!auth) {
@@ -49,7 +55,7 @@ export class AppController {
     }
   }
 
-  @Get("confirm")
+  @Get("auth/confirm")
   @HttpCode(200)
   async confirm(
     @Query('confirmCode') confirmCode: string,
@@ -70,7 +76,7 @@ export class AppController {
       }
     }
 
-    @Post('save')
+    @Post('auth/save')
     @HttpCode(200)
     @UseGuards(AdminGuard)
     async save(@Body() user: User): Promise<ClientResponse> {
