@@ -79,6 +79,37 @@ export class AuthService {
         });
     }
 
+    newConfirmCode(user: User): Promise<User> {
+        return new Promise<User>((resolve, reject) => {
+            this.userModel.findOne({username: user.username}, (err, dbUser) => {
+                if (err) {
+                    return reject(err);
+                }
+                if (!dbUser) {
+                    return reject(new UnauthorizedException());
+                }
+                let code: string = crypto.randomBytes(3).toString('hex');
+                this.userModel.updateOne(
+                    { 
+                        _id: dbUser.id 
+                    }, {
+                        $set: {
+                            confirmCode: code
+                        }
+                    }, (err) => {
+                        if (err) {
+                            return reject(err);
+                        }
+                        resolve({
+                            username: user.username,
+                            password: "",
+                            confirmCode: user.confirmCode
+                        });
+                });
+            });
+        });
+    }
+
     confirm(confirmCode: ConfirmCode): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             if (!confirmCode.confirmCode) {
