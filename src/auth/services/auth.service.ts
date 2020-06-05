@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from "@nestjs/common";
+import { Injectable, InternalServerErrorException, UnauthorizedException } from "@nestjs/common";
 import { Model } from "mongoose";
 import { InjectModel } from "@nestjs/mongoose";
 import * as bcrypt from 'bcrypt';
@@ -47,6 +47,32 @@ export class AuthService {
                             password: "",
                             confirmCode: user_db.confirmCode
                         });
+                    });
+                });
+            });
+        });
+    }
+
+    confirmCode(user: User): Promise<User> {
+        return new Promise<User>((resolve, reject) => {
+            this.userModel.findOne({ username: user.username }, (err, dbUser) => {
+                if (err) {
+                    return reject(err);
+                }
+                if (!dbUser) {
+                    return reject(new UnauthorizedException());
+                }
+                bcrypt.compare(user.password, dbUser.password, (err, res) => {
+                    if (err) {
+                        return reject(err);
+                    }
+                    if (err) {
+                        return reject(new UnauthorizedException());
+                    }
+                    resolve({
+                        username: dbUser.username,
+                        password: "",
+                        confirmCode: dbUser.confirmCode
                     });
                 });
             });
@@ -108,7 +134,7 @@ export class AuthService {
                     if (err) {
                         return reject(err);
                     }
-                    if (!res) {true
+                    if (!res) {
                         return resolve({
                             isAuthorized: false,
                             isAdmin: false,

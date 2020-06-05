@@ -111,6 +111,14 @@ describe('AuthService', () => {
         });
     });
 
+    describe('when registered user asks for confirm code', () => {
+        it('should be given', async () => {
+            let user: User = testData.nonVerifiedUsers.standard[3];
+            let res: User = await authService.confirmCode(user);
+            expect(user.confirmCode).toBe(res.confirmCode);
+        });
+    });
+
     describe('when admin user login', () => {
         test('verify isAdmin returning true for admin token', async () => {
             let user: User = testData.verifiedUsers.admin[0];

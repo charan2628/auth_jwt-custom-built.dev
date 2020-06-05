@@ -158,6 +158,21 @@ describe('AppController (e2e)', () => {
     });
   });
 
+  describe('POST /confirmCode', () => {
+    it('if valid user', async () => {
+      let user: User = testData.nonVerifiedUsers.standard[3];
+      await request(app.getHttpServer())
+        .post('/auth/confirmCode')
+        .send({username: user.username, password: user.username})
+        .then((res: request.Response) => {
+          expect(res.status).toBe(200);
+          let response = res.body as ClientResponse;
+          expect(response.status).toBe(true);
+          expect(response.data.confirmCode).toBe(user.confirmCode);
+        });
+    });
+  });
+
   describe('POST /save', () => {
     it('standard user cannot save new user', async () => {
       let user: User = testData.verifiedUsers.standard[0];

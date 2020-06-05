@@ -55,6 +55,17 @@ export class AppController {
     }
   }
 
+  @Post("auth/confirmCode")
+  @HttpCode(200)
+  async confirmCode(@Body() user: User): Promise<ClientResponse> {
+    let res = await this.authService.confirmCode(user);
+    return {
+      status: true,
+      message: "successful",
+      data: res
+    };
+  }
+
   @Get("auth/confirm")
   @HttpCode(200)
   async confirm(
