@@ -56,12 +56,14 @@ export class AuthService {
     }
 
     confirmCode(user: User): Promise<User> {
+        debugger
         return new Promise<User>((resolve, reject) => {
             this.userModel.findOne({ username: user.username }, (err, dbUser) => {
+                debugger
                 if (err) {
                     return reject(err);
                 }
-                if (!dbUser && !dbUser.flag) {
+                if (!dbUser || !dbUser.flag) {
                     return reject(new UnauthorizedException());
                 }
                 bcrypt.compare(user.password, dbUser.password, (err, res) => {
@@ -116,9 +118,9 @@ export class AuthService {
         });
     }
 
-    newConfirmCode(user: User): Promise<User> {
+    newConfirmCode(username: string): Promise<User> {
         return new Promise<User>((resolve, reject) => {
-            this.userModel.findOne({username: user.username}, (err, dbUser) => {
+            this.userModel.findOne({ username }, (err, dbUser) => {
                 if (err) {
                     return reject(err);
                 }
@@ -139,7 +141,7 @@ export class AuthService {
                             return reject(err);
                         }
                         resolve({
-                            username: user.username,
+                            username,
                             password: "",
                             confirmCode: code
                         });
