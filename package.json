@@ -38,6 +38,8 @@
     "async": "^3.2.0",
     "axios": "^0.19.2",
     "bcrypt": "^4.0.1",
+    "class-transformer": "^0.2.3",
+    "class-validator": "^0.12.2",
     "dotenv": "^8.2.0",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.16",

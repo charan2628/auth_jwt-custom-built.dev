@@ -3,24 +3,24 @@
     "verifiedUsers": {
         "standard": [
             {
-                "username": "userv1",
-                "password": "$2b$04$KrhAX/AQsNrKXVf8l.2tiOTn2PylRaBvkt3YANApPCK68CB7kc32a",
+                "username": "userv1@u.com",
+                "password": "$2b$04$r46/PzKGqX3.ue10VRj4t.clm0z8SGb.WP9pj1ZijbtAlMOOP0q5q",
                 "isAdmin": false,
                 "isVerified": true,
                 "confirmCode": "0",
                 "flag": false
             },
             {
-                "username": "userv2",
-                "password": "$2b$04$QaXwoARrFT.JO7zTixC3NeGRcsKQA/VHNsJbcFKvCJSsxAP1FFej6",
+                "username": "userv2@u.com",
+                "password": "$2b$04$tWdrBrkrZzLyQLWiUYlR6.169D4KOAeneihQLe1V9py4FaRUn3lIS",
                 "isAdmin": false,
                 "isVerified": true,
                 "confirmCode": "0",
                 "flag": false
             },
             {
-                "username": "userv3",
-                "password": "$2b$04$lYQD1fuqmoE8Rfmv792ZgOImQ.V.YPDN5KJh/jRmlZGD0Rrkg43OC",
+                "username": "userv3@u.com",
+                "password": "$2b$04$nxY9a4z8AHcoVJnVATOWmes14TAJwU/itXNzw1iiGiX/CX00QOINS",
                 "isAdmin": false,
                 "isVerified": true,
                 "confirmCode": "0",
@@ -29,16 +29,16 @@
         ],
         "admin": [
             {
-                "username": "adminv1",
-                "password": "$2b$04$k/b10oReBS7AoyXkUtPTo.rUeRMzQ/ZY5rwL/zwoe6baMwLZI1Gl2",
+                "username": "adminv1@u.com",
+                "password": "$2b$04$7S8AwnCttOZDsrbSEOsgKOzahvHqgGpFGPSWeD/reqQ0PZ47xn40O",
                 "isAdmin": true,
                 "isVerified": true,
                 "confirmCode": "0",
                 "flag": false
             },
             {
-                "username": "adminv2",
-                "password": "$2b$04$ChDGvtajVOKlvAlORoG02.BuIqWD2uLGtqqC0XunhUEtrCBXE9.8S",
+                "username": "adminv2@u.com",
+                "password": "$2b$04$F8ZnX4Z8S.gKUManoPoAbedT0NbSDkILtCj0WVTu4DLvaXj5zrHBS",
                 "isAdmin": true,
                 "isVerified": true,
                 "confirmCode": "0",
@@ -49,32 +49,32 @@
     "nonVerifiedUsers": {
         "standard": [
             {
-                "username": "user1",
-                "password": "$2b$04$NZ4i3b73cJ.Sf3N.LWpd2.Dqw.pWJ9IdyBPejTJmIktMkrszSvOXS",
+                "username": "user1@u.com",
+                "password": "$2b$04$DOOw0yR6ORhecP0g/T2Ne.B1CpFGvN8hG3j.f4XHfXvaQK9PQU7t.",
                 "isAdmin": false,
                 "isVerified": false,
                 "confirmCode": "1234",
                 "flag": true
             },
             {
-                "username": "user2",
-                "password": "$2b$04$66JGumk7TAvcJog6LxmwMemE5txtuRhv94r7IMhHZCi67ivpqVCEi",
+                "username": "user2@u.com",
+                "password": "$2b$04$PX4rQD/bAZFIAm8Rn.oJPuHmaE7n9W06HTymx6w6a26/N.pgHaQ3.",
                 "isAdmin": false,
                 "isVerified": false,
                 "confirmCode": "1234",
                 "flag": true
             },
             {
-                "username": "user3",
-                "password": "$2b$04$6WuuRY7SO91Ckubejy0j5u0Cz5KI9L06l7dvCGGGWCLpuo6CQeR3m",
+                "username": "user3@u.com",
+                "password": "$2b$04$ifV/rmFGZHx9FIAnWMr8LeYBo7HE1tQydwJOt72hQfdQAKey0ZKXO",
                 "isAdmin": false,
                 "isVerified": false,
                 "confirmCode": "1234",
                 "flag": true
             },
             {
-                "username": "user4",
-                "password": "$2b$04$eWTa7cYedYIzYEIdnJ8VtexIAVQn66pnZ45O0FSDlvBzx4/RMdOGe",
+                "username": "user4@u.com",
+                "password": "$2b$04$OAbnB4AgomIAePRluDTal.fsVAqoOruutut02r4NhixBLi3uh/mcm",
                 "isAdmin": false,
                 "isVerified": false,
                 "confirmCode": "1234",
@@ -83,24 +83,24 @@
         ],
         "admin": [
             {
-                "username": "admin1",
-                "password": "$2b$04$SPw4c8M55VSuFE637wxrze0/wCbUOv2Okp3FE59WwZnvESpLPyUq.",
+                "username": "admin1@u.com",
+                "password": "$2b$04$GVOIUBudgASt7FLlL/.fS.UYj6uKIV0AiPgIRY06MuJJ5KvDDLKXK",
                 "isAdmin": true,
                 "isVerified": false,
                 "confirmCode": "1234",
                 "flag": true
             },
             {
-                "username": "admin2",
-                "password": "$2b$04$4gNw/4dQUEBL//tOgq9c.eJjxnR8hcOfcGS2cBDYnnyLr6fgNtnWi",
+                "username": "admin2@u.com",
+                "password": "$2b$04$E6L0mjIqmNG4mmtveBqXRuiCfIfpu5gRXHOBcLkkkml3xEP3uaD9C",
                 "isAdmin": true,
                 "isVerified": false,
                 "confirmCode": "1234",
                 "flag": true
             },
             {
-                "username": "admin3",
-                "password": "$2b$04$rzBeHJ2oiN84pXyR2h97ueF7rjSk3TKsurlf4/hFyv4Pvn7zHLAUK",
+                "username": "admin3@u.com",
+                "password": "$2b$04$BqyH4oTy4bNzkgAuZCJlDOScdvUvaIwHUTYag1VJNhjhq/I4w70oG",
                 "isAdmin": true,
                 "isVerified": false,
                 "confirmCode": "1234",

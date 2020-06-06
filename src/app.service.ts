@@ -23,7 +23,7 @@ export class AppService {
             }
             let data = res.data as ClientResponseDto;
             resolve(data.status ? true : false);
-        });
+        }).catch(err => reject(err));
       });
   }
 }

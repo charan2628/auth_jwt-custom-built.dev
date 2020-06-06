@@ -1,4 +1,4 @@
-import { Catch, ExceptionFilter, ArgumentsHost, HttpStatus, UnauthorizedException } from "@nestjs/common";
+import { Catch, ExceptionFilter, ArgumentsHost, HttpStatus, UnauthorizedException, BadRequestException } from "@nestjs/common";
 import * as express from 'express';
 import { UserAlreadyExisted } from "../exceptions/UserAlreadyExisted";
 import { ClientResponseDto } from "../dto/ClientResponseDto";
@@ -21,6 +21,13 @@ export class AppExceptionFilter implements ExceptionFilter {
             let res: ClientResponseDto = {
                 status: false,
                 message: "un-authorized"
+            };
+            response.status(200).json(res);
+        } else if (exception instanceof BadRequestException) {
+            let message = (exception.getResponse() as any).message;
+            let res: ClientResponseDto = {
+                status: false,
+                message
             };
             response.status(200).json(res);
         } else {

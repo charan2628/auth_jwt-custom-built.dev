@@ -10,6 +10,8 @@ import { AppExceptionFilter } from './filters/AppExceptionFilter';
 import MailMessages from './messages/MailMessages';
 import { AppService } from './app.service';
 import { MailDto } from './dto/MailDto';
+import { UserLoginDto } from './dto/UserLoginDto';
+import { ChangePasswordDto } from './dto/ChangePasswordDto';
 
 @Controller('')
 @UseFilters(AppExceptionFilter)
@@ -27,8 +29,8 @@ export class AppController {
 
   @Post('auth/login')
   @HttpCode(200)
-  async login(@Body() user: User): Promise<UserResponseDto> {
-    return await this.authService.genToken(user);
+  async login(@Body() userLoginDto: UserLoginDto): Promise<UserResponseDto> {
+    return await this.authService.genToken(userLoginDto);
   }
 
   @Get('auth/verifyToken')
@@ -62,14 +64,13 @@ export class AppController {
 
   @Post("auth/resendConfirmCode")
   @HttpCode(200)
-  async resendConfirmCode(@Body() user: User): Promise<ClientResponseDto> {
-    debugger
-    let res = await this.authService.confirmCode(user);
+  async resendConfirmCode(@Body() userLoginDto: UserLoginDto): Promise<ClientResponseDto> {
+    let res = await this.authService.confirmCode(userLoginDto);
     let mail: MailDto = {
       from: "AUTH_JWT",
       to: res.username,
       subject: "CONFIRMATION CODE",
-      html: MailMessages.confirmCode(res.confirmCode, user.username)
+      html: MailMessages.confirmCode(res.confirmCode, userLoginDto.username)
     }
     let mailRes = await this.appService.sendMail(mail);
     if (mailRes) {
@@ -87,6 +88,12 @@ export class AppController {
   @Get("auth/forgotPassword")
   @HttpCode(200)
   async forgotPassword(@Query('username') username: string): Promise<ClientResponseDto> {
+    if (!username) {
+      return {
+        status: false,
+        message: "Invalid params"
+      };
+    }
     let user: User = await this.authService.newConfirmCode(username);
     let mail: MailDto = {
       from: "AUTH_JWT",
@@ -109,8 +116,8 @@ export class AppController {
 
   @Post("auth/changePassword")
   @HttpCode(200)
-  async changePassword(@Body() user: User): Promise<ClientResponseDto> {
-    let res: boolean = await this.authService.changePassword(user);
+  async changePassword(@Body() changePasswordDto: ChangePasswordDto): Promise<ClientResponseDto> {
+    let res: boolean = await this.authService.changePassword(changePasswordDto);
     if (!res) {
       return {
         status: false,
@@ -128,6 +135,12 @@ export class AppController {
   async confirm(
     @Query('confirmCode') confirmCode: string,
     @Query('username') username: string): Promise<ClientResponseDto> {
+      if (!confirmCode || !username) {
+        return {
+          status: false,
+          message: "Invalid params"
+        }
+      }
       let res: boolean = await this.authService.confirm({
         confirmCode,
         username

@@ -12,6 +12,8 @@ import { JWTTokenService } from "./jwt-token.service";
 import { ConfirmCodeDto } from "../../dto/ConfirmCodeDto";
 import { TokenExpiredError, JsonWebTokenError, NotBeforeError } from "jsonwebtoken";
 import { UserAlreadyExisted } from "../../exceptions/UserAlreadyExisted";
+import { UserLoginDto } from "../../dto/UserLoginDto";
+import { ChangePasswordDto } from "../../dto/ChangePasswordDto";
 
 @Injectable()
 export class AuthService {
@@ -55,10 +57,9 @@ export class AuthService {
         });
     }
 
-    confirmCode(user: User): Promise<User> {
-        debugger
+    confirmCode(userLoginDto: UserLoginDto): Promise<User> {
         return new Promise<User>((resolve, reject) => {
-            this.userModel.findOne({ username: user.username }, (err, dbUser) => {
+            this.userModel.findOne({ username: userLoginDto.username }, (err, dbUser) => {
                 debugger
                 if (err) {
                     return reject(err);
@@ -66,7 +67,7 @@ export class AuthService {
                 if (!dbUser || !dbUser.flag) {
                     return reject(new UnauthorizedException());
                 }
-                bcrypt.compare(user.password, dbUser.password, (err, res) => {
+                bcrypt.compare(userLoginDto.password, dbUser.password, (err, res) => {
                     if (err) {
                         return reject(err);
                     }
@@ -83,19 +84,19 @@ export class AuthService {
         });
     }
 
-    changePassword(user: User): Promise<boolean> {
+    changePassword(changePasswordDto: ChangePasswordDto): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            this.userModel.findOne({ username: user.username }, (err, dbUser) => {
+            this.userModel.findOne({ username: changePasswordDto.username }, (err, dbUser) => {
                 if (err) {
                     return reject(err);
                 }
                 if (!dbUser) {
                     return reject(new UnauthorizedException());
                 }
-                if (dbUser.confirmCode !== user.confirmCode && dbUser.flag) {
+                if (dbUser.confirmCode !== changePasswordDto.confirmCode && dbUser.flag) {
                     return resolve(false);
                 }
-                bcrypt.hash(user.password, +process.env.SALT_ROUNDS, (err, hash) => {
+                bcrypt.hash(changePasswordDto.password, +process.env.SALT_ROUNDS, (err, hash) => {
                     if (err) {
                         return reject(err);
                     }
@@ -189,9 +190,9 @@ export class AuthService {
         });
     }
 
-    isAuthorized(user: User) : Promise<AuthResponseDto> {
+    isAuthorized(userLoginDto: UserLoginDto) : Promise<AuthResponseDto> {
         return new Promise<AuthResponseDto>((resolve, reject) => {
-            this.userModel.findOne({username: user.username}, function(err, dbUser) {
+            this.userModel.findOne({username: userLoginDto.username}, function(err, dbUser) {
                 if(err) {
                     return reject(err);
                 }
@@ -202,7 +203,7 @@ export class AuthService {
                         isVerified: false
                     });
                 }
-                bcrypt.compare(user.password, dbUser.password, function(err, res) {
+                bcrypt.compare(userLoginDto.password, dbUser.password, function(err, res) {
                     if (err) {
                         return reject(err);
                     }
@@ -223,9 +224,9 @@ export class AuthService {
         });
     }
 
-    genToken(user: User): Promise<UserResponseDto> {
+    genToken(userLoginDto: UserLoginDto): Promise<UserResponseDto> {
         return new Promise<UserResponseDto>((resolve, reject) => {
-            this.isAuthorized(user).then((authResponse: AuthResponseDto) => {
+            this.isAuthorized(userLoginDto).then((authResponse: AuthResponseDto) => {
                 if (!authResponse.isAuthorized || !authResponse.isVerified) {
                     return resolve({
                         status: false,
@@ -234,7 +235,7 @@ export class AuthService {
                     });
                 }
                 this.jwtTokenService.genToken({
-                    user: user.username,
+                    user: userLoginDto.username,
                     isAdmin: authResponse.isAdmin
                 }).then((token: string) => {
                     resolve({
