@@ -1,4 +1,4 @@
-export interface ClientResponse {
+export interface ClientResponseDto {
     status: boolean;
     message: string;
     data?: any;

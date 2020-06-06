@@ -1,4 +1,4 @@
-export interface ConfirmCode {
+export interface ConfirmCodeDto {
     readonly confirmCode: string;
     readonly username: string
 }

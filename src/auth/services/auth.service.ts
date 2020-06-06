@@ -4,12 +4,12 @@ import { InjectModel } from "@nestjs/mongoose";
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 
-import { User } from "../../interfaces/User";
+import { User } from "../../models/User";
 import { UserDoc } from '../schemas/user.schema';
-import { AuthResponse } from "../../interfaces/AuthResponse";
-import { UserResponse } from "../../interfaces/UserResponse";
+import { AuthResponseDto } from "../../dto/AuthResponseDto";
+import { UserResponseDto } from "../../dto/UserResponseDto";
 import { JWTTokenService } from "./jwt-token.service";
-import { ConfirmCode } from "../../interfaces/ConfirmCode";
+import { ConfirmCodeDto } from "../../dto/ConfirmCodeDto";
 import { TokenExpiredError, JsonWebTokenError, NotBeforeError } from "jsonwebtoken";
 import { UserAlreadyExisted } from "../../exceptions/UserAlreadyExisted";
 
@@ -150,7 +150,7 @@ export class AuthService {
         });
     }
 
-    confirm(confirmCode: ConfirmCode): Promise<boolean> {
+    confirm(confirmCode: ConfirmCodeDto): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             if (!confirmCode.confirmCode) {
                 return resolve(false);
@@ -189,8 +189,8 @@ export class AuthService {
         });
     }
 
-    isAuthorized(user: User) : Promise<AuthResponse> {
-        return new Promise<AuthResponse>((resolve, reject) => {
+    isAuthorized(user: User) : Promise<AuthResponseDto> {
+        return new Promise<AuthResponseDto>((resolve, reject) => {
             this.userModel.findOne({username: user.username}, function(err, dbUser) {
                 if(err) {
                     return reject(err);
@@ -223,9 +223,9 @@ export class AuthService {
         });
     }
 
-    genToken(user: User): Promise<UserResponse> {
-        return new Promise<UserResponse>((resolve, reject) => {
-            this.isAuthorized(user).then((authResponse: AuthResponse) => {
+    genToken(user: User): Promise<UserResponseDto> {
+        return new Promise<UserResponseDto>((resolve, reject) => {
+            this.isAuthorized(user).then((authResponse: AuthResponseDto) => {
                 if (!authResponse.isAuthorized || !authResponse.isVerified) {
                     return resolve({
                         status: false,

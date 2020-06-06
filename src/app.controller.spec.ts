@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { TestData } from './interfaces/TestData';
-import { User } from './interfaces/User';
-import { UserResponse } from './interfaces/UserResponse';
-import { ClientResponse } from './interfaces/ClientResponse';
+import { TestData } from './models/TestData';
+import { User } from './models/User';
+import { UserResponseDto } from './dto/UserResponseDto';
+import { ClientResponseDto } from './dto/ClientResponseDto';
 import { AdminGuard } from './auth/guards/admin.guard';
 
 describe('AppController', () => {
@@ -31,7 +31,7 @@ describe('AppController', () => {
   describe('when verified user login', () => {
     it('should return valid token', async () => {
       let user: User = testData.verifiedUsers.standard[0];
-      let usrRes: UserResponse = await appController.login({
+      let usrRes: UserResponseDto = await appController.login({
         ...user,
         password: user.username
       });
@@ -46,7 +46,7 @@ describe('AppController', () => {
   describe('when verified admin user login', () => {
     it('it should return valid token', async () => {
       let user: User = testData.verifiedUsers.admin[0];
-      let usrRes: UserResponse = await appController.login({
+      let usrRes: UserResponseDto = await appController.login({
         ...user,
         password: user.username
       });
@@ -66,7 +66,7 @@ describe('AppController', () => {
         password: user.username
       })).token;
       expect(token).toBeTruthy();
-      let res: ClientResponse = await appController.verifyToken("Bearer " + token);
+      let res: ClientResponseDto = await appController.verifyToken("Bearer " + token);
       expect(res.status).toBe(true);
     });
 
@@ -77,7 +77,7 @@ describe('AppController', () => {
         password: user.username
       })).token;
       expect(token).toBeTruthy();
-      let res: ClientResponse = await appController.verifyToken("Bearer " + token);
+      let res: ClientResponseDto = await appController.verifyToken("Bearer " + token);
       expect(res.status).toBe(true);
     });
   });
@@ -85,7 +85,7 @@ describe('AppController', () => {
   describe('when user provides valid confirm code', () => {
     test('when user is standard', async () => {
       let user: User = testData.nonVerifiedUsers.standard[2];
-      let res: ClientResponse = await appController.confirm(user.confirmCode, user.username);
+      let res: ClientResponseDto = await appController.confirm(user.confirmCode, user.username);
       expect(res.status).toBe(true);
     });
   });
@@ -93,7 +93,7 @@ describe('AppController', () => {
   describe('when valid user request for confirm code', () => {
     test.skip('it should be returned', async () => {
       let user: User = testData.nonVerifiedUsers.standard[3];
-      let res: ClientResponse = await appController.resendConfirmCode(
+      let res: ClientResponseDto = await appController.resendConfirmCode(
         {username: user.username, password: user.username}
       );
       expect(res.status).toBe(true);
@@ -106,7 +106,7 @@ describe('AppController', () => {
         username: "dummy1",
         password: "dummy1"
       };
-      let res: ClientResponse = await appController.save(user);
+      let res: ClientResponseDto = await appController.save(user);
       expect(res.status).toBe(true);
     });
   });

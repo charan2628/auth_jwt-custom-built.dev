@@ -1,15 +1,15 @@
 import { Controller, Get, Post, Body, Headers, Query, UseGuards, HttpCode, UseFilters } from '@nestjs/common';
 
 import { AuthService } from './auth/services/auth.service';
-import { User } from './interfaces/User';
-import { UserResponse } from './interfaces/UserResponse';
+import { User } from './models/User';
+import { UserResponseDto } from './dto/UserResponseDto';
 import { JWTTokenService } from './auth/services/jwt-token.service';
-import { ClientResponse } from './interfaces/ClientResponse';
+import { ClientResponseDto } from './dto/ClientResponseDto';
 import { AdminGuard } from './auth/guards/admin.guard';
 import { AppExceptionFilter } from './filters/AppExceptionFilter';
 import MailMessages from './messages/MailMessages';
 import { AppService } from './app.service';
-import { Mail } from './interfaces/Mail';
+import { MailDto } from './dto/MailDto';
 
 @Controller('')
 @UseFilters(AppExceptionFilter)
@@ -27,13 +27,13 @@ export class AppController {
 
   @Post('auth/login')
   @HttpCode(200)
-  async login(@Body() user: User): Promise<UserResponse> {
+  async login(@Body() user: User): Promise<UserResponseDto> {
     return await this.authService.genToken(user);
   }
 
   @Get('auth/verifyToken')
   @HttpCode(200)
-  async verifyToken(@Headers("authorization") auth: string): Promise<ClientResponse> {
+  async verifyToken(@Headers("authorization") auth: string): Promise<ClientResponseDto> {
     if (!auth) {
       return {
         status: false,
@@ -62,10 +62,10 @@ export class AppController {
 
   @Post("auth/resendConfirmCode")
   @HttpCode(200)
-  async resendConfirmCode(@Body() user: User): Promise<ClientResponse> {
+  async resendConfirmCode(@Body() user: User): Promise<ClientResponseDto> {
     debugger
     let res = await this.authService.confirmCode(user);
-    let mail: Mail = {
+    let mail: MailDto = {
       from: "AUTH_JWT",
       to: res.username,
       subject: "CONFIRMATION CODE",
@@ -86,9 +86,9 @@ export class AppController {
 
   @Get("auth/forgotPassword")
   @HttpCode(200)
-  async forgotPassword(@Query('username') username: string): Promise<ClientResponse> {
+  async forgotPassword(@Query('username') username: string): Promise<ClientResponseDto> {
     let user: User = await this.authService.newConfirmCode(username);
-    let mail: Mail = {
+    let mail: MailDto = {
       from: "AUTH_JWT",
       to: username,
       subject: "FORGOT PASSWORD",
@@ -109,7 +109,7 @@ export class AppController {
 
   @Post("auth/changePassword")
   @HttpCode(200)
-  async changePassword(@Body() user: User): Promise<ClientResponse> {
+  async changePassword(@Body() user: User): Promise<ClientResponseDto> {
     let res: boolean = await this.authService.changePassword(user);
     if (!res) {
       return {
@@ -127,7 +127,7 @@ export class AppController {
   @HttpCode(200)
   async confirm(
     @Query('confirmCode') confirmCode: string,
-    @Query('username') username: string): Promise<ClientResponse> {
+    @Query('username') username: string): Promise<ClientResponseDto> {
       let res: boolean = await this.authService.confirm({
         confirmCode,
         username
@@ -147,7 +147,7 @@ export class AppController {
   @Post('auth/save')
   @HttpCode(200)
   @UseGuards(AdminGuard)
-  async save(@Body() user: User): Promise<ClientResponse> {
+  async save(@Body() user: User): Promise<ClientResponseDto> {
     let res = await this.authService.save(user);
     return {
       status: true,
