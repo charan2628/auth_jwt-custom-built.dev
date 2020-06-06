@@ -32,7 +32,7 @@ if (!names.find(n => n === "users")) {
                 }
             }
         },
-        validationAction: "warn"
+        validationAction: "error"
     });
 
     db.users.createIndex({username: 1});

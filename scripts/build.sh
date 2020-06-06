@@ -15,9 +15,9 @@ else
     --name custom-built-mongodb mongo:4.2
 fi
 
-if [ "$(sudo docker build --network custom-built.net -t auth_jwt:1.0 .)" ]; then
-    sudo docker run -d --rm auth_jwt:1.0 --network custom-built-net \
-    -p 3000:3000 --name auth-jwt-run auth_jwt:1.0
+if [ "$(sudo docker build --network custom-built-net -t auth_jwt:2.0 .)" ]; then
+    sudo docker run --rm -d --network custom-built-net \
+    -p 3000:3000 --name auth_jwt auth_jwt:2.0
 else 
     echo "####### DOCKER BUILD FAILED ###########"
 fi
