@@ -112,12 +112,14 @@ export class AppController {
     if (!res) {
       return {
         status: false,
-        message: "failed"
+        message: "invalid code",
+        data: null
       }
     }
     return {
       status: true,
-      message: "success"
+      message: "changed",
+      data: null
     }
   }
 
