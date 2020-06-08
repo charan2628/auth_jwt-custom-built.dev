@@ -31,6 +31,7 @@ export class AppExceptionFilter implements ExceptionFilter {
             };
             response.status(200).json(res);
         } else {
+            console.log(exception);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
                 code: HttpStatus.INTERNAL_SERVER_ERROR,
                 "message": "Internal Server Error"

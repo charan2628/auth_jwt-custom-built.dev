@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Headers, Query, UseGuards, HttpCode, UseFilters } from '@nestjs/common';
+import { Controller, Get, Post, Body, Headers, Query, UseGuards, HttpCode, UseFilters, UnauthorizedException, BadRequestException } from '@nestjs/common';
 
 import { AuthService } from './auth/services/auth.service';
 import { User } from './models/User';
@@ -12,6 +12,7 @@ import { AppService } from './app.service';
 import { MailDto } from './dto/MailDto';
 import { UserLoginDto } from './dto/UserLoginDto';
 import { ChangePasswordDto } from './dto/ChangePasswordDto';
+import { isJWTHeader } from './validators/isJWT';
 
 @Controller('')
 @UseFilters(AppExceptionFilter)
@@ -31,37 +32,23 @@ export class AppController {
 
   @Post('auth/login')
   @HttpCode(200)
-  async login(@Body() userLoginDto: UserLoginDto): Promise<LoginResponseDto> {
-    return await this.authService.genToken(userLoginDto);
+  async login(@Body() user: User): Promise<ClientResponseDto> {
+    let loginRes: LoginResponseDto = await this.authService.genToken(user);
+    return {
+      status: loginRes.status,
+      message: loginRes.message,
+      data: loginRes
+    }
   }
 
   @Get('auth/verifyToken')
   @HttpCode(200)
-  async verifyToken(@Headers("authorization") auth: string): Promise<ClientResponseDto> {
-    if (!auth) {
-      return {
-        status: false,
-        message: ""
-      }
+  async verifyToken(@Headers("authorization") authHeader: string): Promise<ClientResponseDto> {
+    if (!isJWTHeader(authHeader)) {
+      throw new UnauthorizedException();
     }
-    const token: string = auth.split(" ")[1];
-    if (!token) {
-      return {
-        status: false,
-        message: ""
-      }
-    }
-    let res: boolean = await this.jwtTokenService.verifyToken(token);
-    if (res) {
-      return {
-        status: true,
-        message: "Token Valid"
-      }
-    }
-    return {
-      status: false,
-      message: "Token Expired"
-    }
+    let token: string = authHeader.split(" ")[1];
+    return this.jwtTokenService.verifyToken(token);
   }
 
   @Post("auth/resendConfirmCode")

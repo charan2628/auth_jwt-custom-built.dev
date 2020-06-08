@@ -1,6 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { Algorithm, sign as jwtSign, verify as jwtVerify, TokenExpiredError } from 'jsonwebtoken';
+import { Algorithm, sign as jwtSign, verify as jwtVerify, TokenExpiredError, JsonWebTokenError } from 'jsonwebtoken';
 import { readFileSync } from 'fs';
+import { ClientResponseDto } from "../../dto/ClientResponseDto";
 
 @Injectable()
 export class JWTTokenService {
@@ -28,16 +29,25 @@ export class JWTTokenService {
         });
     }
 
-    verifyToken(token: string): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
+    verifyToken(token: string): Promise<ClientResponseDto> {
+        return new Promise<ClientResponseDto>((resolve, reject) => {
             jwtVerify(token, this.publicKey, (err) => {
                 if (err) {
-                    if (err instanceof TokenExpiredError) {
-                        return resolve(false);
+                    if (err instanceof TokenExpiredError || err instanceof JsonWebTokenError) {
+                        return resolve({
+                            status: false,
+                            message: 
+                                err instanceof TokenExpiredError ? "Token expired" : "Invalid token",
+                            data: null
+                        });
                     }
-                    return reject(err);
+                    reject(err);
                 }
-                resolve(true);
+                resolve({
+                    status: true,
+                    message: "Valid token",
+                    data: null
+                });
             });
         });
     }

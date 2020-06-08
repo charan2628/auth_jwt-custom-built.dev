@@ -190,9 +190,9 @@ export class AuthService {
         });
     }
 
-    isAuthorized(userLoginDto: UserLoginDto) : Promise<AuthResponseDto> {
+    isAuthorized(user: User) : Promise<AuthResponseDto> {
         return new Promise<AuthResponseDto>((resolve, reject) => {
-            this.userModel.findOne({username: userLoginDto.username}, function(err, dbUser) {
+            this.userModel.findOne({username: user.username}, function(err, dbUser) {
                 if(err) {
                     return reject(err);
                 }
@@ -203,7 +203,7 @@ export class AuthService {
                         isVerified: false
                     });
                 }
-                bcrypt.compare(userLoginDto.password, dbUser.password, function(err, res) {
+                bcrypt.compare(user.password, dbUser.password, function(err, res) {
                     if (err) {
                         return reject(err);
                     }
@@ -224,22 +224,25 @@ export class AuthService {
         });
     }
 
-    genToken(userLoginDto: UserLoginDto): Promise<LoginResponseDto> {
+    genToken(user: User): Promise<LoginResponseDto> {
         return new Promise<LoginResponseDto>((resolve, reject) => {
-            this.isAuthorized(userLoginDto).then((authResponse: AuthResponseDto) => {
+            this.isAuthorized(user).then((authResponse: AuthResponseDto) => {
                 if (!authResponse.isAuthorized || !authResponse.isVerified) {
                     return resolve({
+                        token: "",
+                        expiresIn: 0,
                         status: false,
-                        message: "un-authorized",
+                        message: authResponse.isAuthorized ? "unVerified" : "unAuthorized",
                         authResponse
                     });
                 }
                 this.jwtTokenService.genToken({
-                    user: userLoginDto.username,
+                    user: user.username,
                     isAdmin: authResponse.isAdmin
                 }).then((token: string) => {
                     resolve({
                         token,
+                        expiresIn: +process.env.JWT_EXP,
                         status: true,
                         message: "authorized",
                         authResponse
