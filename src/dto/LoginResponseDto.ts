@@ -1,6 +1,6 @@
 import { AuthResponseDto } from "./AuthResponseDto";
 
-export interface UserResponseDto {
+export interface LoginResponseDto {
     token?: string,
     status: boolean,
     message: string,

@@ -6,7 +6,7 @@ import * as async from 'async';
 import { AppModule } from './../src/app.module';
 import { TestData } from '../src/models/TestData';
 import { User } from '../src/models/User';
-import { UserResponseDto } from '../src/dto/UserResponseDto';
+import { LoginResponseDto } from '../src/dto/LoginResponseDto';
 import { ClientResponseDto } from 'src/dto/ClientResponseDto';
 
 describe('AppController (e2e)', () => {
@@ -34,7 +34,7 @@ describe('AppController (e2e)', () => {
         })
         .then((res: request.Response) => {
           expect(res.status).toBe(200);
-          let response = res.body as UserResponseDto;
+          let response = res.body as LoginResponseDto;
           expect(response.token).toBeTruthy();
           expect(response.status).toBe(true);
         });
@@ -50,7 +50,7 @@ describe('AppController (e2e)', () => {
         })
         .then((res: request.Response) => {
           expect(res.status).toBe(200);
-          let response = res.body as UserResponseDto;
+          let response = res.body as LoginResponseDto;
           expect(response.token).toBeTruthy();
           expect(response.status).toBe(true);
         });
@@ -83,7 +83,7 @@ describe('AppController (e2e)', () => {
             })
             .then((res: request.Response) => {
               expect(res.status).toBe(200);
-              let response = res.body as UserResponseDto;
+              let response = res.body as LoginResponseDto;
               expect(response.token).toBeTruthy();
               expect(response.status).toBe(true);
               cb(null, response.token);
@@ -140,7 +140,7 @@ describe('AppController (e2e)', () => {
         .send({username: user.username, password: user.username})
         .then(async (res: request.Response) => {
           expect(res.status).toBe(200);
-          let response = res.body as UserResponseDto;
+          let response = res.body as LoginResponseDto;
           expect(response.token).toBeTruthy();
           expect(response.authResponse.isVerified).toBe(true);
           expect(response.authResponse.isAdmin).toBe(true);
@@ -181,7 +181,7 @@ describe('AppController (e2e)', () => {
         .send({username: user.username, password: user.username})
         .then(async (res: request.Response) => {
           expect(res.status).toBe(200);
-          let response = res.body as UserResponseDto;
+          let response = res.body as LoginResponseDto;
           expect(response.token).toBeTruthy();
           expect(response.authResponse.isVerified).toBe(true);
           expect(response.authResponse.isAdmin).toBe(false);
@@ -207,7 +207,7 @@ describe('AppController (e2e)', () => {
         .send(user)
         .then((res: request.Response) => {
           expect(res.status).toBe(200)
-          let response = res.body as UserResponseDto;
+          let response = res.body as LoginResponseDto;
           expect(response.status).toBe(false);
         });
     });

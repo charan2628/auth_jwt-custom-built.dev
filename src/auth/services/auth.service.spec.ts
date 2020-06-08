@@ -5,7 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { User } from '../../models/User';
 import { JWTTokenService } from './jwt-token.service';
 import { TestData } from '../../models/TestData';
-import { UserResponseDto } from '../../dto/UserResponseDto';
+import { LoginResponseDto } from '../../dto/LoginResponseDto';
 import { UserAlreadyExisted } from '../../exceptions/UserAlreadyExisted';
 
 describe('AuthService', () => {
@@ -30,7 +30,7 @@ describe('AuthService', () => {
     describe('when user is registered and verified', () => {
         it('if user is standard', async () => {
             let user: User = testData.verifiedUsers.standard[0];
-            let userRes: UserResponseDto = await authService.genToken({
+            let userRes: LoginResponseDto = await authService.genToken({
                 ...user,
                 password: user.username 
             });
@@ -43,7 +43,7 @@ describe('AuthService', () => {
 
         it('if user is admin', async () => {
             let user: User = testData.verifiedUsers.admin[0];
-            let userRes: UserResponseDto = await authService.genToken({
+            let userRes: LoginResponseDto = await authService.genToken({
                 ...user,
                 password: user.username 
             });
@@ -58,7 +58,7 @@ describe('AuthService', () => {
     describe('when user is registered and un-verified', () => {
         it('if user is standard', async () => {
             let user: User = testData.nonVerifiedUsers.standard[0];
-            let userRes: UserResponseDto = await authService.genToken({
+            let userRes: LoginResponseDto = await authService.genToken({
                 ...user,
                 password: user.username 
             });
@@ -71,7 +71,7 @@ describe('AuthService', () => {
 
         it('if user is admin', async () => {
             let user: User = testData.nonVerifiedUsers.admin[0];
-            let userRes: UserResponseDto = await authService.genToken({
+            let userRes: LoginResponseDto = await authService.genToken({
                 ...user,
                 password: user.username 
             });
@@ -100,7 +100,7 @@ describe('AuthService', () => {
                 confirmCode: user.confirmCode
             });
             expect(res).toBe(true);
-            let userRes: UserResponseDto = await authService.genToken({
+            let userRes: LoginResponseDto = await authService.genToken({
                 ...user,
                 password: user.username
             });
@@ -141,7 +141,7 @@ describe('AuthService', () => {
                 confirmCode: res.confirmCode
             });
             expect(response).toBe(true);
-            let userResponse: UserResponseDto = await authService.genToken({
+            let userResponse: LoginResponseDto = await authService.genToken({
                 username: user.username,
                 password: "1234"
             });

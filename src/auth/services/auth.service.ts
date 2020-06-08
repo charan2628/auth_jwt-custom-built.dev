@@ -7,7 +7,7 @@ import * as crypto from 'crypto';
 import { User } from "../../models/User";
 import { UserDoc } from '../schemas/user.schema';
 import { AuthResponseDto } from "../../dto/AuthResponseDto";
-import { UserResponseDto } from "../../dto/UserResponseDto";
+import { LoginResponseDto } from "../../dto/LoginResponseDto";
 import { JWTTokenService } from "./jwt-token.service";
 import { ConfirmCodeDto } from "../../dto/ConfirmCodeDto";
 import { TokenExpiredError, JsonWebTokenError, NotBeforeError } from "jsonwebtoken";
@@ -224,8 +224,8 @@ export class AuthService {
         });
     }
 
-    genToken(userLoginDto: UserLoginDto): Promise<UserResponseDto> {
-        return new Promise<UserResponseDto>((resolve, reject) => {
+    genToken(userLoginDto: UserLoginDto): Promise<LoginResponseDto> {
+        return new Promise<LoginResponseDto>((resolve, reject) => {
             this.isAuthorized(userLoginDto).then((authResponse: AuthResponseDto) => {
                 if (!authResponse.isAuthorized || !authResponse.isVerified) {
                     return resolve({

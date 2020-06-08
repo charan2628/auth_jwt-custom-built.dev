@@ -4,7 +4,7 @@ import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
 import { TestData } from './models/TestData';
 import { User } from './models/User';
-import { UserResponseDto } from './dto/UserResponseDto';
+import { LoginResponseDto } from './dto/LoginResponseDto';
 import { ClientResponseDto } from './dto/ClientResponseDto';
 import { AdminGuard } from './auth/guards/admin.guard';
 
@@ -31,7 +31,7 @@ describe('AppController', () => {
   describe('when verified user login', () => {
     it('should return valid token', async () => {
       let user: User = testData.verifiedUsers.standard[0];
-      let usrRes: UserResponseDto = await appController.login({
+      let usrRes: LoginResponseDto = await appController.login({
         ...user,
         password: user.username
       });
@@ -46,7 +46,7 @@ describe('AppController', () => {
   describe('when verified admin user login', () => {
     it('it should return valid token', async () => {
       let user: User = testData.verifiedUsers.admin[0];
-      let usrRes: UserResponseDto = await appController.login({
+      let usrRes: LoginResponseDto = await appController.login({
         ...user,
         password: user.username
       });

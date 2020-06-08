@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Headers, Query, UseGuards, HttpCode, UseFi
 
 import { AuthService } from './auth/services/auth.service';
 import { User } from './models/User';
-import { UserResponseDto } from './dto/UserResponseDto';
+import { LoginResponseDto } from './dto/LoginResponseDto';
 import { JWTTokenService } from './auth/services/jwt-token.service';
 import { ClientResponseDto } from './dto/ClientResponseDto';
 import { AdminGuard } from './auth/guards/admin.guard';
@@ -23,13 +23,15 @@ export class AppController {
 
   @Get('')
   @HttpCode(200)
-  alive(): string {
-    return "alive";
+  alive(): any {
+    return {
+      status: "rocking"
+    };
   }
 
   @Post('auth/login')
   @HttpCode(200)
-  async login(@Body() userLoginDto: UserLoginDto): Promise<UserResponseDto> {
+  async login(@Body() userLoginDto: UserLoginDto): Promise<LoginResponseDto> {
     return await this.authService.genToken(userLoginDto);
   }
 
