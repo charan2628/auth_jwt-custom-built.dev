@@ -90,7 +90,7 @@ export class AuthService {
                     return reject(err);
                 }
                 if (!dbUser) {
-                    return reject(new UnauthorizedException());
+                    return reject(new UnauthorizedException("username not found"));
                 }
                 if (dbUser.confirmCode !== changePasswordDto.confirmCode && dbUser.flag) {
                     return resolve(false);
@@ -125,7 +125,7 @@ export class AuthService {
                     return reject(err);
                 }
                 if (!dbUser) {
-                    return reject(new UnauthorizedException());
+                    return reject(new UnauthorizedException("username not found"));
                 }
                 let code: string = crypto.randomBytes(3).toString('hex');
                 this.userModel.updateOne(

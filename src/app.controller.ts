@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, Headers, Query, UseGuards, HttpCode, UseFilters, UnauthorizedException, BadRequestException } from '@nestjs/common';
+import { isEmail } from 'class-validator';
 
 import { AuthService } from './auth/services/auth.service';
 import { User } from './models/User';
@@ -79,11 +80,8 @@ export class AppController {
   @Get("auth/forgotPassword")
   @HttpCode(200)
   async forgotPassword(@Query('username') username: string): Promise<ClientResponseDto> {
-    if (!username) {
-      return {
-        status: false,
-        message: "Invalid params"
-      };
+    if (!isEmail(username)) {
+      throw new BadRequestException();
     }
     let user: User = await this.authService.newConfirmCode(username);
     let mail: MailDto = {
@@ -93,15 +91,17 @@ export class AppController {
       html: MailMessages.forgotPassword(user.confirmCode, username)
     };
     let mailRes = await this.appService.sendMail(mail);
-    if (mailRes) {
+    if (!mailRes) {
       return {
-        status: true,
-        message: "successful"
+        status: false,
+        message: "mail sent failed request again",
+        data: null
       };
     }
     return {
-      status: false,
-      message: "failed",
+      status: true,
+      message: "mail sent",
+      data: null
     };
   }
 
