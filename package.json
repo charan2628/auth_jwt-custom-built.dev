@@ -1,7 +1,7 @@
 {
   "name": "jwt_auth_custom_built",
-  "version": "1.0.0",
-  "description": "JWT Authentication for my webapps",
+  "version": "2.3.0",
+  "description": "JWT Authentication for custom_built dev site webapps",
   "author": "CHARAN2628",
   "private": true,
   "license": "MIT",
