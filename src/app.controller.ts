@@ -10,9 +10,9 @@ import { AppExceptionFilter } from './filters/AppExceptionFilter';
 import MailMessages from './messages/MailMessages';
 import { AppService } from './app.service';
 import { MailDto } from './dto/MailDto';
-import { UserLoginDto } from './dto/UserLoginDto';
 import { ChangePasswordDto } from './dto/ChangePasswordDto';
 import { isJWTHeader } from './validators/isJWT';
+import { ConfirmCodeDto } from './dto/ConfirmCodeDto';
 
 @Controller('')
 @UseFilters(AppExceptionFilter)
@@ -53,24 +53,26 @@ export class AppController {
 
   @Post("auth/resendConfirmCode")
   @HttpCode(200)
-  async resendConfirmCode(@Body() userLoginDto: UserLoginDto): Promise<ClientResponseDto> {
-    let res = await this.authService.confirmCode(userLoginDto);
+  async resendConfirmCode(@Body() user: User): Promise<ClientResponseDto> {
+    let res = await this.authService.getConfirmCode(user);
     let mail: MailDto = {
       from: "AUTH_JWT",
       to: res.username,
       subject: "CONFIRMATION CODE",
-      html: MailMessages.confirmCode(res.confirmCode, userLoginDto.username)
+      html: MailMessages.confirmCode(res.confirmCode, user.username)
     }
     let mailRes = await this.appService.sendMail(mail);
-    if (mailRes) {
+    if (!mailRes) {
       return {
-        status: true,
-        message: "successful"
+        status: false,
+        message: "mail sent failed request again",
+        data: null
       };
     }
     return {
-      status: false,
-      message: "failed",
+      status: true,
+      message: "mail sent",
+      data: null
     };
   }
 
@@ -121,28 +123,13 @@ export class AppController {
 
   @Get("auth/confirm")
   @HttpCode(200)
-  async confirm(
-    @Query('confirmCode') confirmCode: string,
-    @Query('username') username: string): Promise<ClientResponseDto> {
-      if (!confirmCode || !username) {
-        return {
-          status: false,
-          message: "Invalid params"
-        }
-      }
-      let res: boolean = await this.authService.confirm({
-        confirmCode,
-        username
-      });
-      if (!res) {
-        return {
-          status: false,
-          message: "Invalid Confirm code"
-        }
-      }
+  async confirm(@Query() confirmCodeDto: ConfirmCodeDto): Promise<ClientResponseDto> {
+      let res: boolean = await this.authService.confirm(confirmCodeDto);
       return {
-        status: true,
-        message: "Verified"
+        status: res,
+        message: 
+          res ? "confirmed" : "invalid code/username",
+        data: null
       }
     }
 

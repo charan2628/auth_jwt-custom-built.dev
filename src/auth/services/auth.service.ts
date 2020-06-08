@@ -57,22 +57,21 @@ export class AuthService {
         });
     }
 
-    confirmCode(userLoginDto: UserLoginDto): Promise<User> {
+    getConfirmCode(user: User): Promise<User> {
         return new Promise<User>((resolve, reject) => {
-            this.userModel.findOne({ username: userLoginDto.username }, (err, dbUser) => {
-                debugger
+            this.userModel.findOne({ username: user.username }, (err, dbUser) => {
                 if (err) {
                     return reject(err);
                 }
                 if (!dbUser || !dbUser.flag) {
-                    return reject(new UnauthorizedException());
+                    return reject(new UnauthorizedException("username/password did not match"));
                 }
-                bcrypt.compare(userLoginDto.password, dbUser.password, (err, res) => {
+                bcrypt.compare(user.password, dbUser.password, (err, res) => {
                     if (err) {
                         return reject(err);
                     }
                     if (!res) {
-                        return reject(new UnauthorizedException());
+                        return reject(new UnauthorizedException("username/password did not match"));
                     }
                     resolve({
                         username: dbUser.username,
@@ -153,9 +152,6 @@ export class AuthService {
 
     confirm(confirmCode: ConfirmCodeDto): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            if (!confirmCode.confirmCode) {
-                return resolve(false);
-            }
             this.userModel.findOne({username: confirmCode.username}, (err, dbUser) => {
                 if(err) {
                     reject(err);
