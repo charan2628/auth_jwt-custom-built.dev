@@ -13,28 +13,29 @@ export class AppExceptionFilter implements ExceptionFilter {
         if (exception instanceof UserAlreadyExisted) {
             let res: ClientResponseDto = {
                 status: false,
-                message: "user already existed"
+                message: "username already existed",
+                data: null
             };
-            console.log("user already existed");
             response.status(200).json(res);
         } else if (exception instanceof UnauthorizedException) {
             let res: ClientResponseDto = {
                 status: false,
-                message: "un-authorized"
+                message: "unauthorized",
+                data: null
             };
-            response.status(200).json(res);
+            response.status(HttpStatus.UNAUTHORIZED).json(res);
         } else if (exception instanceof BadRequestException) {
-            let message = (exception.getResponse() as any).message;
             let res: ClientResponseDto = {
                 status: false,
-                message
+                message: "Invalid data, refer https://docs.custom-built.dev",
+                data: null
             };
-            response.status(200).json(res);
+            response.status(HttpStatus.BAD_REQUEST).json(res);
         } else {
-            console.log(exception);
             response.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
-                code: HttpStatus.INTERNAL_SERVER_ERROR,
-                "message": "Internal Server Error"
+                status: false,
+                "message": "Internal Server Error",
+                data: null
             });
         }
     }

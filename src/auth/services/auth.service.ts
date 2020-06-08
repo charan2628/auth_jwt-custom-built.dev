@@ -157,7 +157,7 @@ export class AuthService {
                     reject(err);
                 }
                 if(!dbUser) {
-                    return resolve(false);
+                    throw new UnauthorizedException();
                 }
                 if (dbUser.isVerified) {
                     return resolve(true);

@@ -27,7 +27,7 @@ if (!names.find(n => n === "users")) {
                         "bsonType": "string"
                     },
                     "flag": {
-                        "bsonType": "string"
+                        "bsonType": "bool"
                     }
                 }
             }
