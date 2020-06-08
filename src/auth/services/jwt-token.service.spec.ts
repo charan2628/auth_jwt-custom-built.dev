@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { JWTTokenService } from './jwt-token.service';
+import { ClientResponseDto } from '../../dto/ClientResponseDto';
 
 describe('jwt token service', () => {
     let moduleRef: TestingModule;
@@ -19,8 +20,8 @@ describe('jwt token service', () => {
             isAdmin: false
         });
         expect(token).toBeTruthy();
-        let isValid: boolean = await jwtTokenService.verifyToken(token);
-        expect(isValid).toBe(true);
+        let res: ClientResponseDto = await jwtTokenService.verifyToken(token);
+        expect(res.status).toBe(true);
     });
 
     test('token is invalid after exp time', async () => {
@@ -30,7 +31,7 @@ describe('jwt token service', () => {
             isAdmin: false
         });
         expect(token).toBeTruthy();
-        let isValid: boolean = await jwtTokenService.verifyToken(token);
-        expect(isValid).toBe(false);
+        let res: ClientResponseDto = await jwtTokenService.verifyToken(token);
+        expect(res.status).toBe(false);
     });
 });

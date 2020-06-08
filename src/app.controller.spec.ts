@@ -31,30 +31,30 @@ describe('AppController', () => {
   describe('when verified user login', () => {
     it('should return valid token', async () => {
       let user: User = testData.verifiedUsers.standard[0];
-      let usrRes: LoginResponseDto = await appController.login({
+      let res: ClientResponseDto = await appController.login({
         ...user,
         password: user.username
       });
-      expect(usrRes.status).toBe(true);
-      expect(usrRes.token).toBeTruthy();
-      expect(usrRes.authResponse.isAdmin).toBe(false);
-      expect(usrRes.authResponse.isAuthorized).toBe(true);
-      expect(usrRes.authResponse.isVerified).toBe(true);
+      expect(res.status).toBe(true);
+      expect(res.data.token).toBeTruthy();
+      expect(res.data.authResponse.isAdmin).toBe(false);
+      expect(res.data.authResponse.isAuthorized).toBe(true);
+      expect(res.data.authResponse.isVerified).toBe(true);
     });
   });
 
   describe('when verified admin user login', () => {
     it('it should return valid token', async () => {
       let user: User = testData.verifiedUsers.admin[0];
-      let usrRes: LoginResponseDto = await appController.login({
+      let res: ClientResponseDto = await appController.login({
         ...user,
         password: user.username
       });
-      expect(usrRes.status).toBe(true);
-      expect(usrRes.token).toBeTruthy();
-      expect(usrRes.authResponse.isAdmin).toBe(true);
-      expect(usrRes.authResponse.isAuthorized).toBe(true);
-      expect(usrRes.authResponse.isVerified).toBe(true);
+      expect(res.status).toBe(true);
+      expect(res.data.token).toBeTruthy();
+      expect(res.data.authResponse.isAuthorized).toBe(true);
+      expect(res.data.authResponse.isAdmin).toBe(true);
+      expect(res.data.authResponse.isVerified).toBe(true);
     });
   });
 
@@ -64,7 +64,7 @@ describe('AppController', () => {
       let token: string = (await appController.login({
         ...user,
         password: user.username
-      })).token;
+      })).data.token;
       expect(token).toBeTruthy();
       let res: ClientResponseDto = await appController.verifyToken("Bearer " + token);
       expect(res.status).toBe(true);
@@ -75,7 +75,7 @@ describe('AppController', () => {
       let token: string = (await appController.login({
         ...user,
         password: user.username
-      })).token;
+      })).data.token;
       expect(token).toBeTruthy();
       let res: ClientResponseDto = await appController.verifyToken("Bearer " + token);
       expect(res.status).toBe(true);
@@ -85,7 +85,10 @@ describe('AppController', () => {
   describe('when user provides valid confirm code', () => {
     test('when user is standard', async () => {
       let user: User = testData.nonVerifiedUsers.standard[2];
-      let res: ClientResponseDto = await appController.confirm(user.confirmCode, user.username);
+      let res: ClientResponseDto = await appController.confirm({
+        username: user.username,
+        confirmCode: user.confirmCode
+      });
       expect(res.status).toBe(true);
     });
   });

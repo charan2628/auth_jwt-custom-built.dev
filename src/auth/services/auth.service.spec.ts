@@ -114,7 +114,7 @@ describe('AuthService', () => {
     describe('when registered user asks for confirm code', () => {
         it('should be given', async () => {
             let user: User = testData.nonVerifiedUsers.standard[3];
-            let res: User = await authService.confirmCode({
+            let res: User = await authService.getConfirmCode({
                 username: user.username,
                 password: user.username
             });
