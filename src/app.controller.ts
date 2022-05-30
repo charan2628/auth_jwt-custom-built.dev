@@ -6,7 +6,6 @@ import { User } from './models/User';
 import { LoginResponseDto } from './dto/LoginResponseDto';
 import { JWTTokenService } from './auth/services/jwt-token.service';
 import { ClientResponseDto } from './dto/ClientResponseDto';
-import { AdminGuard } from './auth/guards/admin.guard';
 import { AppExceptionFilter } from './filters/AppExceptionFilter';
 import MailMessages from './messages/MailMessages';
 import { AppService } from './app.service';
@@ -136,18 +135,39 @@ export class AppController {
       }
     }
 
-  @Post('auth/save')
+  @Post('auth/register')
   @HttpCode(200)
-  @UseGuards(AdminGuard)
   async save(@Body() user: User): Promise<ClientResponseDto> {
     if (!user.email) {
       throw new BadRequestException();
     }
     let res = await this.authService.save(user);
-    return {
-      status: true,
-      message: "saved",
-      data: res
-    };
+    let mail: MailDto = {
+      from: "AUTH_JWT",
+      to: res.username,
+      subject: "CONFIRMATION CODE",
+      html: MailMessages.confirmCode(res.confirmCode, user.username)
+    }
+    try {
+      let mailRes = await this.appService.sendMail(mail);
+      if (!mailRes) {
+        return {
+          status: false,
+          message: "user registered, mail sent failed, please login to get confirm code.",
+          data: null
+        };
+      }
+      return {
+        status: true,
+        message: "saved",
+        data: null
+      };
+    } catch (error) {
+      return {
+        status: false,
+        message: "user registered, mail sent failed, please login to get confirm code.",
+        data: null
+      };
+    }
   }
 }
