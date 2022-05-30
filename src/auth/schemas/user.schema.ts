@@ -6,6 +6,9 @@ import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 export class UserDoc extends Document {
 
     @Prop()
+    email: string;
+
+    @Prop()
     username: string;
 
     @Prop()

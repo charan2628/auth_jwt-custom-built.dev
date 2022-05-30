@@ -3,7 +3,8 @@
     "verifiedUsers": {
         "standard": [
             {
-                "username": "userv1@u.com",
+                "email": "userv1@u.com",
+                "username": "userv1",
                 "password": "$2b$04$r46/PzKGqX3.ue10VRj4t.clm0z8SGb.WP9pj1ZijbtAlMOOP0q5q",
                 "isAdmin": false,
                 "isVerified": true,
@@ -11,7 +12,8 @@
                 "flag": false
             },
             {
-                "username": "userv2@u.com",
+                "email": "userv2@u.com",
+                "username": "userv2",
                 "password": "$2b$04$tWdrBrkrZzLyQLWiUYlR6.169D4KOAeneihQLe1V9py4FaRUn3lIS",
                 "isAdmin": false,
                 "isVerified": true,
@@ -19,7 +21,8 @@
                 "flag": false
             },
             {
-                "username": "userv3@u.com",
+                "email": "userv3@u.com",
+                "username": "userv3",
                 "password": "$2b$04$nxY9a4z8AHcoVJnVATOWmes14TAJwU/itXNzw1iiGiX/CX00QOINS",
                 "isAdmin": false,
                 "isVerified": true,
@@ -29,7 +32,8 @@
         ],
         "admin": [
             {
-                "username": "adminv1@u.com",
+                "email": "adminv1@u.com",
+                "username": "adminv1",
                 "password": "$2b$04$7S8AwnCttOZDsrbSEOsgKOzahvHqgGpFGPSWeD/reqQ0PZ47xn40O",
                 "isAdmin": true,
                 "isVerified": true,
@@ -37,7 +41,8 @@
                 "flag": false
             },
             {
-                "username": "adminv2@u.com",
+                "email": "adminv2@u.com",
+                "username": "adminv2",
                 "password": "$2b$04$F8ZnX4Z8S.gKUManoPoAbedT0NbSDkILtCj0WVTu4DLvaXj5zrHBS",
                 "isAdmin": true,
                 "isVerified": true,
@@ -49,7 +54,8 @@
     "nonVerifiedUsers": {
         "standard": [
             {
-                "username": "user1@u.com",
+                "email": "user1@u.com",
+                "username": "user1",
                 "password": "$2b$04$DOOw0yR6ORhecP0g/T2Ne.B1CpFGvN8hG3j.f4XHfXvaQK9PQU7t.",
                 "isAdmin": false,
                 "isVerified": false,
@@ -57,7 +63,8 @@
                 "flag": true
             },
             {
-                "username": "user2@u.com",
+                "email": "user2@u.com",
+                "username": "user2",
                 "password": "$2b$04$PX4rQD/bAZFIAm8Rn.oJPuHmaE7n9W06HTymx6w6a26/N.pgHaQ3.",
                 "isAdmin": false,
                 "isVerified": false,
@@ -65,7 +72,8 @@
                 "flag": true
             },
             {
-                "username": "user3@u.com",
+                "email": "user3@u.com",
+                "username": "user3",
                 "password": "$2b$04$ifV/rmFGZHx9FIAnWMr8LeYBo7HE1tQydwJOt72hQfdQAKey0ZKXO",
                 "isAdmin": false,
                 "isVerified": false,
@@ -73,7 +81,8 @@
                 "flag": true
             },
             {
-                "username": "user4@u.com",
+                "email": "user4@u.com",
+                "username": "user4",
                 "password": "$2b$04$OAbnB4AgomIAePRluDTal.fsVAqoOruutut02r4NhixBLi3uh/mcm",
                 "isAdmin": false,
                 "isVerified": false,
@@ -83,7 +92,8 @@
         ],
         "admin": [
             {
-                "username": "admin1@u.com",
+                "email": "admin1@u.com",
+                "username": "admin1",
                 "password": "$2b$04$GVOIUBudgASt7FLlL/.fS.UYj6uKIV0AiPgIRY06MuJJ5KvDDLKXK",
                 "isAdmin": true,
                 "isVerified": false,
@@ -91,7 +101,8 @@
                 "flag": true
             },
             {
-                "username": "admin2@u.com",
+                "email": "admin2@u.com",
+                "username": "admin2",
                 "password": "$2b$04$E6L0mjIqmNG4mmtveBqXRuiCfIfpu5gRXHOBcLkkkml3xEP3uaD9C",
                 "isAdmin": true,
                 "isVerified": false,
@@ -99,7 +110,8 @@
                 "flag": true
             },
             {
-                "username": "admin3@u.com",
+                "email": "admin3@u.com",
+                "username": "admin3",
                 "password": "$2b$04$BqyH4oTy4bNzkgAuZCJlDOScdvUvaIwHUTYag1VJNhjhq/I4w70oG",
                 "isAdmin": true,
                 "isVerified": false,

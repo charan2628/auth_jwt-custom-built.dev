@@ -36,6 +36,7 @@ export class AuthService {
                         return reject(err);
                     }
                     new this.userModel({
+                        email: user.email,
                         username: user.username,
                         password: hash,
                         isVerified: false,
@@ -47,6 +48,7 @@ export class AuthService {
                             return reject(err);
                         }
                         resolve({
+                            email: user_db.email,
                             username: user_db.username,
                             password: "",
                             confirmCode: user_db.confirmCode

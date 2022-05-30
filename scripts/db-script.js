@@ -9,8 +9,11 @@ if (!names.find(n => n === "users")) {
         validator: {
             $jsonSchema: {
                 "bsonType": "object",
-                "required": ["username", "password", "isAdmin", "isVerified", "confirmCode", "flag"],
+                "required": ["email", "username", "password", "isAdmin", "isVerified", "confirmCode", "flag"],
                 "properties": {
+                    "email" : {
+                        "bsonType": "string"
+                    },
                     "username": {
                         "bsonType": "string"
                     },

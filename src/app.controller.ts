@@ -14,6 +14,7 @@ import { MailDto } from './dto/MailDto';
 import { ChangePasswordDto } from './dto/ChangePasswordDto';
 import { isJWTHeader } from './validators/isJWT';
 import { ConfirmCodeDto } from './dto/ConfirmCodeDto';
+import { LoginUser } from './models/LoginUser';
 
 @Controller('')
 @UseFilters(AppExceptionFilter)
@@ -33,7 +34,7 @@ export class AppController {
 
   @Post('auth/login')
   @HttpCode(200)
-  async login(@Body() user: User): Promise<ClientResponseDto> {
+  async login(@Body() user: LoginUser): Promise<ClientResponseDto> {
     let loginRes: LoginResponseDto = await this.authService.genToken(user);
     return {
       status: loginRes.status,
@@ -139,6 +140,9 @@ export class AppController {
   @HttpCode(200)
   @UseGuards(AdminGuard)
   async save(@Body() user: User): Promise<ClientResponseDto> {
+    if (!user.email) {
+      throw new BadRequestException();
+    }
     let res = await this.authService.save(user);
     return {
       status: true,
